@@ -23,7 +23,47 @@
           <p class="portal">Portal Acadêmico · Ensino Fundamental</p>
         </header>
 
-        <!-- Formulário -->
+        <div class="login-card_body">
+          <h1 id="login-title" class="title">Boas-vindas</h1>
+          <p class="subtitle">Acesse sua conta para continuar</p>
+
+          <form class="form" action="#" method="post">
+            <div class="field">
+              <label class="field_label" for="perfil">Perfil de acesso</label>
+              <div class="field_control">
+                <i class="bi bi-person field_icon"></i>
+                <select class="field_input" id="perfil" name="perfil">
+                  <option value="coordenador">Coordenador</option>
+                  <option value="professor">Professor</option>
+                  <option value="aluno" selected>Aluno</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field_label" for="usuario">Usuário</label>
+              <div class="field_control">
+                <i class="bi bi-person field_icon"></i>
+                <input class="field_input" type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" autocomplete="username" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field_label" for="senha">Senha</label>
+              <div class="field_control">
+                <i class="bi bi-key field_icon"></i>
+                <input class="field_input" type="password" id="senha" name="senha" placeholder="Digite sua senha" autocomplete="current-password" />
+              </div>
+            </div>
+
+            <a class="forgot" href="#">Esqueceu a senha?</a>
+
+            <button class="btn" type="submit">
+              Acessar o Sistema
+              <i class="bi bi-arrow-right btn_icon"></i>
+            </button>
+          </form>
+        </div>
 
         <!-- Rodapé do card -->
       </section>

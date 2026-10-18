@@ -1,4 +1,4 @@
-import './login.css'
+import '/src/styles/login.css'
 
 const form = document.querySelector('#login-form')
 const inputUsuario = document.querySelector('#usuario')

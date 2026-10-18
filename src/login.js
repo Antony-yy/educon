@@ -1,21 +1,10 @@
 import './login.css'
+import { mostrarErro, limparErro } from './components/fieldError.js'
 
 const form = document.querySelector('#login-form')
 const inputUsuario = document.querySelector('#usuario')
 const inputSenha = document.querySelector('#senha')
 const selectPerfil = document.querySelector('#perfil')
-
-function mostrarErro(input, mensagem) {
-  const field = input.closest('.field')
-  field.classList.add('field_invalid')
-  field.querySelector('.field_message').textContent = mensagem
-}
-
-function limparErro(input) {
-  const field = input.closest('.field')
-  field.classList.remove('field_invalid')
-  field.querySelector('.field_message').textContent = ''
-}
 
 form.addEventListener('submit', (event) => {
   event.preventDefault()

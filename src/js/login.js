@@ -1,4 +1,4 @@
-import './login.css'
+import '/src/styles/login.css'
 import { mostrarErro, limparErro } from './components/fieldError.js'
 
 const form = document.querySelector('#login-form')

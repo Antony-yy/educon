@@ -155,11 +155,34 @@ body {
   border-radius: 8px;
 }
 
+.field_input:hover {
+  border-color: #93c5fd;
+}
+
 .field_input:focus {
   outline: none;
   background: #fff;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.field_message {
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+  color: #dc2626;
+}
+
+.field_message:empty {
+  display: none;
+}
+
+.field_invalid .field_input {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+
+.field_invalid .field_input:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18);
 }
 
 .forgot {
@@ -195,6 +218,11 @@ body {
 
 .btn:hover {
   background: #1d4ed8;
+}
+
+.btn:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
 }
 
 .btn_icon {

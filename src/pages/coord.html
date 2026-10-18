@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Painel do Coordenador · Colégio Primeiro Sol, João Pessoa, Paraíba." />
+    <title>Primeiro Sol | Painel do Coordenador</title>
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="coordenador.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <aside class="sidebar" aria-label="Menu lateral">
+        <div class="sidebar_top">
+          <div class="brand">
+            <img class="brand_logo" src="assets/logo.svg" alt="" width="40" height="40" />
+            <div class="brand_text">
+              <p class="brand_name">Primeiro Sol</p>
+              <p class="brand_tag">Sistema EDUCON</p>
+            </div>
+          </div>
+
+          <div class="profile">
+            <div class="profile_avatar" aria-hidden="true">CM</div>
+            <div class="profile_text">
+              <p class="profile_name">Prof.ª Carla Mendes</p>
+              <p class="profile_role">Coordenadora Geral</p>
+            </div>
+          </div>
+
+          <nav class="nav" aria-label="Navegação principal">
+            <p class="nav_label">Navegação</p>
+            <ul class="nav_list">
+              <li>
+                <a class="nav_link nav_link--active" href="#" aria-current="page">
+                  <i class="bi bi-card-text"></i>
+                  <span>Gestão de Turmas</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link" href="#">
+                  <i class="bi bi-people"></i>
+                  <span>Matrículas de Alunos</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link" href="#">
+                  <i class="bi bi-calendar3"></i>
+                  <span>Horários Escolares</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link" href="#">
+                  <i class="bi bi-bar-chart"></i>
+                  <span>Relatórios Consolidados</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link" href="#">
+                  <i class="bi bi-chat-square-text"></i>
+                  <span>Fórum de Avisos</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="sidebar_bottom">
+          <button class="close-year" type="button">
+            <i class="bi bi-lock"></i>
+            <span>Fechar Ano Letivo</span>
+          </button>
+
+          <a class="logout" href="index.html">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Sair do sistema</span>
+          </a>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <div class="page-header_text">
+            <p class="eyebrow">Colégio Primeiro Sol · João Pessoa · Paraíba</p>
+            <h1 class="page-title">Painel do Coordenador</h1>
+            <p class="page-subtitle">Gerencie turmas, alunos, professores e o período escolar em um só lugar.</p>
+          </div>
+
+          <div class="page-header_actions">
+            <button class="btn btn--ghost" type="button">
+              <i class="bi bi-plus-lg"></i>
+              Cadastrar aluno
+            </button>
+            <button class="btn btn--primary" type="button">
+              <i class="bi bi-plus-lg"></i>
+              Criar nova turma
+            </button>
+          </div>
+        </header>
+
+        <div class="tabs" role="tablist" aria-label="Seções do painel">
+          <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true">
+            <i class="bi bi-card-text"></i>
+            Gestão de turmas
+          </button>
+          <button class="tabs_item" type="button" role="tab" aria-selected="false">
+            <i class="bi bi-people"></i>
+            Gestão de professores
+            <span class="tabs_badge">8</span>
+          </button>
+          <button class="tabs_item" type="button" role="tab" aria-selected="false">
+            <i class="bi bi-calendar3"></i>
+            Horários
+          </button>
+        </div>
+
+        <!-- Cards de resumo -->
+        <section class="stats" aria-label="Resumo geral">
+          <article class="stat">
+            <div class="stat_icon stat_icon--blue">
+              <i class="bi bi-card-text"></i>
+            </div>
+            <div class="stat_info">
+              <p class="stat_label">Total de turmas</p>
+              <p class="stat_value">8 turmas</p>
+            </div>
+          </article>
+
+          <article class="stat">
+            <div class="stat_icon stat_icon--purple">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="stat_info">
+              <p class="stat_label">Alunos matriculados</p>
+              <p class="stat_value">190 alunos</p>
+            </div>
+          </article>
+
+          <article class="stat">
+            <div class="stat_icon stat_icon--green">
+              <i class="bi bi-calendar-check"></i>
+            </div>
+            <div class="stat_info">
+              <p class="stat_label">Status do ano letivo</p>
+              <p class="stat_value">2026 · Em curso</p>
+              <p class="stat_note">
+                <span class="stat_dot" aria-hidden="true"></span>
+                3º bimestre em andamento
+              </p>
+            </div>
+          </article>
+        </section>
+
+        <!-- Tabela de turmas -->
+        <section class="panel" aria-labelledby="turmas-title">
+          <header class="panel_header">
+            <div>
+              <h2 id="turmas-title" class="panel_title">Turmas ativas</h2>
+              <p class="panel_subtitle">Acompanhe as turmas e seus professores regentes</p>
+            </div>
+
+            <div class="search">
+              <i class="bi bi-search search_icon"></i>
+              <input class="search_input" type="search" placeholder="Buscar turma..." aria-label="Buscar turma" />
+            </div>
+          </header>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Código / Turma</th>
+                  <th scope="col">Turno</th>
+                  <th scope="col">Professor regente</th>
+                  <th scope="col">Alunos</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <p class="class-name">Infantil 3</p>
+                    <p class="class-level">Educação Infantil</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Helena Lima</td>
+                  <td class="students">18</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de Infantil 3"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">Infantil 4</p>
+                    <p class="class-level">Educação Infantil</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Beatriz Alves</td>
+                  <td class="students">20</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de Infantil 4"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">Infantil 5</p>
+                    <p class="class-level">Educação Infantil</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Camila Rocha</td>
+                  <td class="students">22</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de Infantil 5"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">1º Ano A</p>
+                    <p class="class-level">Ensino Fund. I</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Ana Paula</td>
+                  <td class="students">24</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de 1º Ano A"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">2º Ano A</p>
+                    <p class="class-level">Ensino Fund. I</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Amanda Costa</td>
+                  <td class="students">26</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de 2º Ano A"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">3º Ano A</p>
+                    <p class="class-level">Ensino Fund. I</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Juliana Souza</td>
+                  <td class="students">26</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de 3º Ano A"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">4º Ano A</p>
+                    <p class="class-level">Ensino Fund. I</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Renata Dias</td>
+                  <td class="students">27</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de 4º Ano A"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <p class="class-name">5º Ano A</p>
+                    <p class="class-level">Ensino Fund. I</p>
+                  </td>
+                  <td><span class="pill"><i class="bi bi-clock"></i>Matutino</span></td>
+                  <td class="teacher">Prof.ª Patrícia Nunes</td>
+                  <td class="students">27</td>
+                  <td>
+                    <div class="actions">
+                      <button class="btn-sm" type="button">Enturmar</button>
+                      <button class="btn-icon" type="button" aria-label="Ver detalhes de 5º Ano A"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons (UMD bundle to prevent script load errors) -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
@@ -19,7 +19,7 @@
             background-color: #f3f5f9;
         }
 
-        /* Custom Scrollbar for Sidebar and Table */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -89,20 +89,20 @@
             <div class="px-3 space-y-1">
                 <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest my-2">NAVEGAÇÃO</p>
                 
-                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20 transition-all">
+                <button onclick="switchTab('chamada')" id="sidebar-btn-chamada" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20 transition-all text-left">
                     <i data-lucide="book-open" class="w-4 h-4"></i>
                     <span>Diário de Classe</span>
-                </a>
+                </button>
 
-                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all">
+                <button onclick="switchTab('notas')" id="sidebar-btn-notas" class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all text-left">
                     <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
                     <span>Lançamento de Notas</span>
-                </a>
+                </button>
 
-                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all">
+                <button class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all text-left">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                     <span>Meus Horários</span>
-                </a>
+                </button>
             </div>
         </div>
 
@@ -144,238 +144,258 @@
 
         <!-- Internal Navigation Tabs -->
         <div class="bg-slate-200/60 p-1 rounded-2xl flex flex-wrap sm:inline-flex gap-1 mb-6 text-xs font-medium text-slate-600">
-            <button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-blue-600 font-semibold shadow-sm transition-all">
-                <i data-lucide="check" class="w-3.5 h-3.5 text-blue-600"></i>
+            <button id="tab-btn-chamada" onclick="switchTab('chamada')" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-blue-600 font-semibold shadow-sm transition-all">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
                 <span>Chamada e frequência</span>
             </button>
-            <button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:text-slate-900 transition-all">
+            <button id="tab-btn-notas" onclick="switchTab('notas')" class="flex items-center gap-2 px-4 py-2 rounded-xl hover:text-slate-900 transition-all text-slate-600">
                 <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i>
                 <span>Lançamento de notas</span>
             </button>
-            <button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:text-slate-900 transition-all">
+            <button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:text-slate-900 transition-all text-slate-600">
                 <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                 <span>Meus horários</span>
             </button>
         </div>
 
-        <!-- Form Card: Turma, Data e Conteúdo -->
-        <section class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm mb-6 space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                
-                <!-- Turma e Matéria Dropdown -->
-                <div class="md:col-span-2 space-y-1.5">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                        TURMA E MATÉRIA
-                    </label>
-                    <div class="relative flex items-center bg-slate-50/80 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/10 transition-all">
-                        <i data-lucide="book-open" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
-                        <select class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-semibold focus:outline-none appearance-none cursor-pointer pr-6">
-                            <option value="3a-lp" selected>3º Ano A · Língua Portuguesa</option>
-                            <option value="3a-mat">3º Ano A · Matemática</option>
-                            <option value="3a-his">3º Ano A · História</option>
-                        </select>
-                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 pointer-events-none absolute right-3.5"></i>
+        <!-- VIEW 1: CHAMADA E FREQUÊNCIA -->
+        <div id="view-chamada" class="space-y-6">
+            <!-- Form Card: Turma, Data e Conteúdo -->
+            <section class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    
+                    <!-- Turma e Matéria Dropdown -->
+                    <div class="md:col-span-2 space-y-1.5">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                            TURMA E MATÉRIA
+                        </label>
+                        <div class="relative flex items-center bg-slate-50/80 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/10 transition-all">
+                            <i data-lucide="book-open" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
+                            <select class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-semibold focus:outline-none appearance-none cursor-pointer pr-6">
+                                <option value="3a-lp" selected>3º Ano A · Língua Portuguesa</option>
+                                <option value="3a-mat">3º Ano A · Matemática</option>
+                                <option value="3a-his">3º Ano A · História</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 pointer-events-none absolute right-3.5"></i>
+                        </div>
+                    </div>
+
+                    <!-- Data da Aula Input -->
+                    <div class="space-y-1.5">
+                        <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                            DATA DA AULA
+                        </label>
+                        <div class="relative flex items-center bg-slate-50/80 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/10 transition-all">
+                            <i data-lucide="calendar" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
+                            <input 
+                                type="text" 
+                                value="03/10/2026" 
+                                class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-semibold focus:outline-none"
+                            />
+                            <i data-lucide="calendar-days" class="w-4 h-4 text-slate-400 pointer-events-none absolute right-3.5"></i>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Data da Aula Input -->
+                <!-- Conteúdo Ministrado -->
                 <div class="space-y-1.5">
                     <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                        DATA DA AULA
+                        CONTEÚDO MINISTRADO NA AULA
                     </label>
                     <div class="relative flex items-center bg-slate-50/80 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/10 transition-all">
-                        <i data-lucide="calendar" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
+                        <i data-lucide="file-text" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
                         <input 
                             type="text" 
-                            value="03/10/2026" 
-                            class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-semibold focus:outline-none"
+                            value="Resolução de equações do 1º grau" 
+                            placeholder="Digite o conteúdo ministrado..." 
+                            class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-medium focus:outline-none placeholder:text-slate-400"
                         />
-                        <i data-lucide="calendar-days" class="w-4 h-4 text-slate-400 pointer-events-none absolute right-3.5"></i>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Conteúdo Ministrado -->
-            <div class="space-y-1.5">
-                <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-                    CONTEÚDO MINISTRADO NA AULA
-                </label>
-                <div class="relative flex items-center bg-slate-50/80 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/10 transition-all">
-                    <i data-lucide="file-text" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
-                    <input 
-                        type="text" 
-                        value="Resolução de equações do 1º grau" 
-                        placeholder="Digite o conteúdo ministrado..." 
-                        class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-medium focus:outline-none placeholder:text-slate-400"
-                    />
+            <!-- Attendance Table Card -->
+            <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Lista de presença</h2>
+                        <p id="attendance-summary" class="text-xs text-slate-500 font-medium mt-0.5">
+                            4 presentes · 1 falta
+                        </p>
+                    </div>
+
+                    <button id="save-btn" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-md shadow-emerald-600/20 active:scale-95 transition-all">
+                        <i data-lucide="save" class="w-4 h-4"></i>
+                        <span>Salvar chamada</span>
+                    </button>
                 </div>
-            </div>
-        </section>
 
-        <!-- Attendance Table Card -->
-        <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                <th class="py-3 px-6 w-1/3">Nº / ALUNO</th>
+                                <th class="py-3 px-6 text-center w-1/4">STATUS DE PRESENÇA</th>
+                                <th class="py-3 px-6 w-5/12">OBSERVAÇÃO</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="py-3.5 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-slate-400 text-[11px] font-semibold w-4">01</span>
+                                        <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">AC</div>
+                                        <span class="font-bold text-slate-900">Ana Clara Oliveira</span>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-6">
+                                    <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
+                                        <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>P</span> Presença</button>
+                                        <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>F</span> Falta</button>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-6">
+                                    <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="py-3.5 px-6">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-slate-400 text-[11px] font-semibold w-4">02</span>
+                                        <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">BH</div>
+                                        <span class="font-bold text-slate-900">Bruno Henrique Lima</span>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-6">
+                                    <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
+                                        <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>P</span> Presença</button>
+                                        <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>F</span> Falta</button>
+                                    </div>
+                                </td>
+                                <td class="py-3.5 px-6">
+                                    <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- VIEW 2: LANÇAMENTO DE NOTAS (ISSUE #65) -->
+        <div id="view-notas" class="hidden space-y-6">
             
-            <!-- Table Header Bar -->
-            <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
+            <!-- Seletor de Modo (Fundamental 1 vs Pré-zinho) -->
+            <div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-base font-bold text-slate-900">Lista de presença</h2>
-                    <p id="attendance-summary" class="text-xs text-slate-500 font-medium mt-0.5">
-                        4 presentes · 1 falta
-                    </p>
+                    <h2 class="text-sm font-bold text-slate-900">Modo de Avaliação (Issue #65)</h2>
+                    <p class="text-xs text-slate-500">Selecione a visão correspondente ao nível de ensino.</p>
                 </div>
 
-                <button id="save-btn" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-md shadow-emerald-600/20 active:scale-95 transition-all">
-                    <i data-lucide="save" class="w-4 h-4"></i>
-                    <span>Salvar chamada</span>
-                </button>
+                <div class="bg-slate-100 p-1 rounded-xl inline-flex gap-1 text-xs font-semibold">
+                    <button id="mode-fund1-btn" onclick="setGradeMode('fund1')" class="px-4 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition-all">Fundamental 1</button>
+                    <button id="mode-pre-btn" onclick="setGradeMode('pre')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Pré-zinho</button>
+                </div>
             </div>
 
-            <!-- Responsive Table Container -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse min-w-[600px]">
-                    <thead>
-                        <tr class="bg-slate-50/70 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                            <th class="py-3 px-6 w-1/3">Nº / ALUNO</th>
-                            <th class="py-3 px-6 text-center w-1/4">STATUS DE PRESENÇA</th>
-                            <th class="py-3 px-6 w-5/12">OBSERVAÇÃO</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
-                        
-                        <!-- Student 1 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 text-[11px] font-semibold w-4">01</span>
-                                    <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">
-                                        AC
-                                    </div>
-                                    <span class="font-bold text-slate-900">Ana Clara Oliveira</span>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                    <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>P</span> Presença
-                                    </button>
-                                    <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>F</span> Falta
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                            </td>
-                        </tr>
+            <!-- SUB-VIEW: FUNDAMENTAL 1 -->
+            <div id="grade-mode-fund1" class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Visão Fundamental 1</h2>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5">Notas por matéria fixa com cálculo automático da média.</p>
+                    </div>
+                </div>
 
-                        <!-- Student 2 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 text-[11px] font-semibold w-4">02</span>
-                                    <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">
-                                        BH
-                                    </div>
-                                    <span class="font-bold text-slate-900">Bruno Henrique Lima</span>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                    <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>P</span> Presença
-                                    </button>
-                                    <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>F</span> Falta
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                            </td>
-                        </tr>
-
-                        <!-- Student 3 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 text-[11px] font-semibold w-4">03</span>
-                                    <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">
-                                        CS
-                                    </div>
-                                    <span class="font-bold text-slate-900">Camila Souza Martins</span>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                    <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>P</span> Presença
-                                    </button>
-                                    <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>F</span> Falta
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                            </td>
-                        </tr>
-
-                        <!-- Student 4 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 text-[11px] font-semibold w-4">04</span>
-                                    <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">
-                                        DA
-                                    </div>
-                                    <span class="font-bold text-slate-900">Daniel Alves Pereira</span>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                    <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>P</span> Presença
-                                    </button>
-                                    <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>F</span> Falta
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                            </td>
-                        </tr>
-
-                        <!-- Student 5 -->
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-slate-400 text-[11px] font-semibold w-4">05</span>
-                                    <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">
-                                        ER
-                                    </div>
-                                    <span class="font-bold text-slate-900">Eduarda Rocha Santos</span>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                    <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>P</span> Presença
-                                    </button>
-                                    <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1">
-                                        <span>F</span> Falta
-                                    </button>
-                                </div>
-                            </td>
-                            <td class="py-3.5 px-6">
-                                <input type="text" placeholder="Adicionar observação..." class="w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[750px]">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                <th class="py-3 px-6 w-1/4">ALUNO</th>
+                                <th class="py-3 px-4 text-center">MATÉRIA</th>
+                                <th class="py-3 px-4 text-center w-24">NOTA 1 (N1)</th>
+                                <th class="py-3 px-4 text-center w-24">NOTA 2 (N2)</th>
+                                <th class="py-3 px-6 text-center w-28">MÉDIA</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
+                            <tr class="hover:bg-slate-50/50 transition-colors grade-row">
+                                <td class="py-3.5 px-6 font-bold text-slate-900">Ana Clara Oliveira</td>
+                                <td class="py-3.5 px-4 text-center font-semibold text-slate-600">Português</td>
+                                <td class="py-3.5 px-4 text-center"><input type="number" min="0" max="10" step="0.1" placeholder="0.0" oninput="calculateRowMedia(this)" class="input-n1 w-16 text-center bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-blue-600 focus:bg-white" /></td>
+                                <td class="py-3.5 px-4 text-center"><input type="number" min="0" max="10" step="0.1" placeholder="0.0" oninput="calculateRowMedia(this)" class="input-n2 w-16 text-center bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-blue-600 focus:bg-white" /></td>
+                                <td class="py-3.5 px-6 text-center"><span class="media-result inline-block px-2.5 py-1 rounded-md bg-slate-100 font-bold text-slate-500">-</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors grade-row">
+                                <td class="py-3.5 px-6 font-bold text-slate-900">Ana Clara Oliveira</td>
+                                <td class="py-3.5 px-4 text-center font-semibold text-slate-600">Matemática</td>
+                                <td class="py-3.5 px-4 text-center"><input type="number" min="0" max="10" step="0.1" placeholder="0.0" oninput="calculateRowMedia(this)" class="input-n1 w-16 text-center bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-blue-600 focus:bg-white" /></td>
+                                <td class="py-3.5 px-4 text-center"><input type="number" min="0" max="10" step="0.1" placeholder="0.0" oninput="calculateRowMedia(this)" class="input-n2 w-16 text-center bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-blue-600 focus:bg-white" /></td>
+                                <td class="py-3.5 px-6 text-center"><span class="media-result inline-block px-2.5 py-1 rounded-md bg-slate-100 font-bold text-slate-500">-</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors grade-row">
+                                <td class="py-3.5 px-6 font-bold text-slate-900">Bruno Henrique Lima</td>
+                                <td class="py-3.5 px-4 text-center font-semibold text-slate-600">Português</td>
+                                <td class="py-3.5 px-4 text-center"><input type="number" min="0" max="10" step="0.1" placeholder="0.0" oninput="calculateRowMedia(this)" class="input-n1 w-16 text-center bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-blue-600 focus:bg-white" /></td>
+                                <td class="py-3.5 px-4 text-center"><input type="number" min="0" max="10" step="0.1" placeholder="0.0" oninput="calculateRowMedia(this)" class="input-n2 w-16 text-center bg-slate-50 border border-slate-200 rounded-lg py-1.5 px-2 text-xs font-semibold focus:outline-none focus:border-blue-600 focus:bg-white" /></td>
+                                <td class="py-3.5 px-6 text-center"><span class="media-result inline-block px-2.5 py-1 rounded-md bg-slate-100 font-bold text-slate-500">-</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </section>
+
+            <!-- SUB-VIEW: PRÉ-ZINHO -->
+            <div id="grade-mode-pre" class="hidden bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+                <div class="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Visão Pré-zinho</h2>
+                        <p class="text-xs text-slate-500 font-medium mt-0.5">Avaliação por conceito de desenvolvimento e parecer descritivo resumido.</p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead>
+                            <tr class="bg-slate-50/70 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                                <th class="py-3 px-6 w-1/4">ALUNO</th>
+                                <th class="py-3 px-4 w-1/4">CONCEITO</th>
+                                <th class="py-3 px-6 w-1/2">PARECER DESCRITIVO RESUMIDO</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="py-3.5 px-6 font-bold text-slate-900">Ana Clara Oliveira</td>
+                                <td class="py-3.5 px-4">
+                                    <select class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-blue-600">
+                                        <option value="ds" selected>Desenvolvimento Satisfatório</option>
+                                        <option value="ed">Em Desenvolvimento</option>
+                                        <option value="na">Necessita de Apoio</option>
+                                    </select>
+                                </td>
+                                <td class="py-3.5 px-6">
+                                    <textarea rows="2" placeholder="Digite o parecer descritivo resumido..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs focus:outline-none focus:border-blue-600 focus:bg-white transition-all"></textarea>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="py-3.5 px-6 font-bold text-slate-900">Bruno Henrique Lima</td>
+                                <td class="py-3.5 px-4">
+                                    <select class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-medium text-slate-800 focus:outline-none focus:border-blue-600">
+                                        <option value="ds">Desenvolvimento Satisfatório</option>
+                                        <option value="ed" selected>Em Desenvolvimento</option>
+                                        <option value="na">Necessita de Apoio</option>
+                                    </select>
+                                </td>
+                                <td class="py-3.5 px-6">
+                                    <textarea rows="2" placeholder="Digite o parecer descritivo resumido..." class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs focus:outline-none focus:border-blue-600 focus:bg-white transition-all"></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
 
     </main>
 
@@ -393,14 +413,91 @@
     </div>
 
     <script>
-        // Initialize Lucide icons safely
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
         });
 
-        // Toggle Presence and Absence buttons
+        // Alternar abas principais (Chamada x Lançamento de Notas)
+        function switchTab(tab) {
+            const viewChamada = document.getElementById('view-chamada');
+            const viewNotas = document.getElementById('view-notas');
+
+            const tabBtnChamada = document.getElementById('tab-btn-chamada');
+            const tabBtnNotas = document.getElementById('tab-btn-notas');
+            const sideBtnChamada = document.getElementById('sidebar-btn-chamada');
+            const sideBtnNotas = document.getElementById('sidebar-btn-notas');
+
+            if (tab === 'chamada') {
+                viewChamada.classList.remove('hidden');
+                viewNotas.classList.add('hidden');
+
+                tabBtnChamada.className = 'flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-blue-600 font-semibold shadow-sm transition-all';
+                tabBtnNotas.className = 'flex items-center gap-2 px-4 py-2 rounded-xl hover:text-slate-900 transition-all text-slate-600';
+
+                sideBtnChamada.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20 transition-all text-left';
+                sideBtnNotas.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all text-left';
+            } else if (tab === 'notas') {
+                viewChamada.classList.add('hidden');
+                viewNotas.classList.remove('hidden');
+
+                tabBtnNotas.className = 'flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-blue-600 font-semibold shadow-sm transition-all';
+                tabBtnChamada.className = 'flex items-center gap-2 px-4 py-2 rounded-xl hover:text-slate-900 transition-all text-slate-600';
+
+                sideBtnNotas.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/20 transition-all text-left';
+                sideBtnChamada.className = 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all text-left';
+            }
+        }
+
+        // Alternar entre visões da Issue #65 (Fundamental 1 x Pré-zinho)
+        function setGradeMode(mode) {
+            const fund1View = document.getElementById('grade-mode-fund1');
+            const preView = document.getElementById('grade-mode-pre');
+            const fund1Btn = document.getElementById('mode-fund1-btn');
+            const preBtn = document.getElementById('mode-pre-btn');
+
+            if (mode === 'fund1') {
+                fund1View.classList.remove('hidden');
+                preView.classList.add('hidden');
+                fund1Btn.className = 'px-4 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition-all';
+                preBtn.className = 'px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+            } else {
+                fund1View.classList.add('hidden');
+                preView.classList.remove('hidden');
+                preBtn.className = 'px-4 py-2 rounded-lg bg-blue-600 text-white shadow-sm transition-all';
+                fund1Btn.className = 'px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all';
+            }
+        }
+
+        // Cálculo Automático da Média (Fundamental 1)
+        function calculateRowMedia(inputEl) {
+            const row = inputEl.closest('.grade-row');
+            const n1Val = row.querySelector('.input-n1').value;
+            const n2Val = row.querySelector('.input-n2').value;
+            const mediaBadge = row.querySelector('.media-result');
+
+            if (n1Val !== '' && n2Val !== '') {
+                const n1 = parseFloat(n1Val);
+                const n2 = parseFloat(n2Val);
+                const media = (n1 + n2) / 2;
+
+                mediaBadge.textContent = media.toFixed(1);
+
+                if (media >= 7.0) {
+                    mediaBadge.className = 'media-result inline-block px-2.5 py-1 rounded-md bg-emerald-100 font-bold text-emerald-700';
+                } else if (media >= 5.0) {
+                    mediaBadge.className = 'media-result inline-block px-2.5 py-1 rounded-md bg-amber-100 font-bold text-amber-700';
+                } else {
+                    mediaBadge.className = 'media-result inline-block px-2.5 py-1 rounded-md bg-red-100 font-bold text-red-700';
+                }
+            } else {
+                mediaBadge.textContent = '-';
+                mediaBadge.className = 'media-result inline-block px-2.5 py-1 rounded-md bg-slate-100 font-bold text-slate-500';
+            }
+        }
+
+        // Toggle Presença/Falta
         function toggleAttendance(button, type) {
             const container = button.parentElement;
             const presenceBtn = container.querySelector('.status-btn-presence');
@@ -413,20 +510,9 @@
                 absenceBtn.classList.add('active');
                 presenceBtn.classList.remove('active');
             }
-
-            updateSummary();
         }
 
-        // Dynamic Attendance Counter
-        function updateSummary() {
-            const activePresences = document.querySelectorAll('.status-btn-presence.active').length;
-            const activeAbsences = document.querySelectorAll('.status-btn-absence.active').length;
-            const summaryEl = document.getElementById('attendance-summary');
-            
-            summaryEl.textContent = `${activePresences} ${activePresences === 1 ? 'presente' : 'presentes'} · ${activeAbsences} ${activeAbsences === 1 ? 'falta' : 'faltas'}`;
-        }
-
-        // Profile switcher visual feedback
+        // Troca visual de perfil
         function selectProfile(selectedBtn) {
             const container = selectedBtn.parentElement;
             const buttons = container.querySelectorAll('button');
@@ -437,29 +523,6 @@
 
             selectedBtn.className = 'px-3.5 py-1.5 rounded-full bg-[#0d1527] text-white transition-all shadow-sm';
         }
-
-        // Save notification
-        document.getElementById('save-btn').addEventListener('click', () => {
-            const btn = document.getElementById('save-btn');
-            const originalHTML = btn.innerHTML;
-            
-            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span>Chamada Salva!</span>`;
-            btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
-            btn.classList.add('bg-blue-600');
-            
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-
-            setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.classList.remove('bg-blue-600');
-                btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
-                if (typeof lucide !== 'undefined') {
-                    lucide.createIcons();
-                }
-            }, 2000);
-        });
     </script>
 </body>
 </html>

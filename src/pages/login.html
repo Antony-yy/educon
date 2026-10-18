@@ -27,7 +27,7 @@
           <h1 id="login-title" class="title">Boas-vindas</h1>
           <p class="subtitle">Acesse sua conta para continuar</p>
 
-          <form class="form" action="#" method="post">
+          <form class="form" id="login-form" action="#" method="post">
             <div class="field">
               <label class="field_label" for="perfil">Perfil de acesso</label>
               <div class="field_control">
@@ -46,6 +46,7 @@
                 <i class="bi bi-person field_icon"></i>
                 <input class="field_input" type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" autocomplete="username" />
               </div>
+              <p class="field_message" role="alert"></p>
             </div>
 
             <div class="field">
@@ -54,6 +55,7 @@
                 <i class="bi bi-key field_icon"></i>
                 <input class="field_input" type="password" id="senha" name="senha" placeholder="Digite sua senha" autocomplete="current-password" />
               </div>
+              <p class="field_message" role="alert"></p>
             </div>
 
             <a class="forgot" href="#">Esqueceu a senha?</a>

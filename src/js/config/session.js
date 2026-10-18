@@ -1,0 +1,1 @@
+export const CHAVE_SESSAO = 'educon_session'

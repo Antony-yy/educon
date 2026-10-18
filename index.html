@@ -156,10 +156,10 @@
             </button>
         </div>
 
-        <!-- VIEW 1: CHAMADA E FREQUÊNCIA (ISSUE #63) -->
+        <!-- VIEW 1: CHAMADA E FREQUÊNCIA -->
         <div id="view-chamada" class="space-y-6">
 
-            <!-- Banner Feedback de Sucesso para Chamada (Issue #63) -->
+            <!-- Banner Feedback de Sucesso para Chamada -->
             <div id="attendance-save-alert" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl flex items-center justify-between shadow-sm transition-all">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
@@ -179,14 +179,14 @@
             <section class="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     
-                    <!-- Turma e Matéria Dropdown -->
+                    <!-- Turma e Matéria Dropdown (Carrega Alunos - Issue #62) -->
                     <div class="md:col-span-2 space-y-1.5">
                         <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                             TURMA E MATÉRIA
                         </label>
                         <div class="relative flex items-center bg-slate-50/80 border border-slate-200 rounded-xl px-3.5 py-2.5 focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-600/10 transition-all">
                             <i data-lucide="book-open" class="w-4 h-4 text-slate-400 mr-3 shrink-0"></i>
-                            <select id="select-turma-chamada" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-semibold focus:outline-none appearance-none cursor-pointer pr-6">
+                            <select id="select-turma-chamada" onchange="loadStudentsForClass(this.value)" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 font-semibold focus:outline-none appearance-none cursor-pointer pr-6">
                                 <option value="3a-lp" selected>3º Ano A · Língua Portuguesa</option>
                                 <option value="3a-mat">3º Ano A · Matemática</option>
                                 <option value="3a-his">3º Ano A · História</option>
@@ -236,11 +236,10 @@
                     <div>
                         <h2 class="text-base font-bold text-slate-900">Lista de presença</h2>
                         <p id="attendance-summary" class="text-xs text-slate-500 font-medium mt-0.5">
-                            2 alunos registrados
+                            Carregando alunos...
                         </p>
                     </div>
 
-                    <!-- BOTÃO SALVAR CHAMADA EM LOTE (ISSUE #63) -->
                     <button id="save-btn" onclick="saveAttendanceBatch()" class="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs py-2.5 px-4 rounded-xl shadow-md shadow-emerald-600/20 active:scale-95 transition-all">
                         <i data-lucide="save" class="w-4 h-4"></i>
                         <span>Salvar chamada (Upsert)</span>
@@ -256,53 +255,16 @@
                                 <th class="py-3 px-6 w-5/12">OBSERVAÇÃO</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
-                            <tr class="hover:bg-slate-50/50 transition-colors attendance-row">
-                                <td class="py-3.5 px-6">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-slate-400 text-[11px] font-semibold w-4">01</span>
-                                        <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">AC</div>
-                                        <span class="font-bold text-slate-900 student-name">Ana Clara Oliveira</span>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-6">
-                                    <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                        <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>P</span> Presença</button>
-                                        <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>F</span> Falta</button>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-6">
-                                    <input type="text" placeholder="Adicionar observação..." class="input-obs w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-slate-50/50 transition-colors attendance-row">
-                                <td class="py-3.5 px-6">
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-slate-400 text-[11px] font-semibold w-4">02</span>
-                                        <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">BH</div>
-                                        <span class="font-bold text-slate-900 student-name">Bruno Henrique Lima</span>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-6">
-                                    <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
-                                        <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>P</span> Presença</button>
-                                        <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>F</span> Falta</button>
-                                    </div>
-                                </td>
-                                <td class="py-3.5 px-6">
-                                    <input type="text" placeholder="Adicionar observação..." class="input-obs w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
-                                </td>
-                            </tr>
+                        <tbody id="attendance-table-body" class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
+                            <!-- Inserido dinamicamente via JS (Issue #62) -->
                         </tbody>
                     </table>
                 </div>
             </section>
         </div>
 
-        <!-- VIEW 2: LANÇAMENTO DE NOTAS (ISSUES #64, #65, #66 & #67) -->
+        <!-- VIEW 2: LANÇAMENTO DE NOTAS -->
         <div id="view-notas" class="hidden space-y-6">
-            
-            <!-- Seletor de Modo & Filtro de Bimestre (Issue #64, #67) -->
             <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                     <div>
@@ -310,7 +272,6 @@
                         <p class="text-xs text-slate-500">Selecione o nível de ensino e o período letivo para lançamento em lote.</p>
                     </div>
 
-                    <!-- Bimestre Selector (Issue #64) -->
                     <div class="relative">
                         <select id="select-bimestre" class="bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:border-blue-600 appearance-none cursor-pointer">
                             <option value="1B">1º Bimestre</option>
@@ -328,7 +289,6 @@
                         <button id="mode-pre-btn" onclick="setGradeMode('pre')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all">Pré-zinho</button>
                     </div>
 
-                    <!-- BOTÃO SALVAR EM LOTE (ISSUE #67) -->
                     <button onclick="saveBatchGrades()" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs py-2 px-4 rounded-xl shadow-md shadow-blue-600/20 active:scale-95 transition-all">
                         <i data-lucide="save" class="w-4 h-4"></i>
                         <span>Salvar em Lote (#67)</span>
@@ -336,7 +296,6 @@
                 </div>
             </div>
 
-            <!-- Banner Feedback de Sucesso do Salvamento em Lote -->
             <div id="batch-save-alert" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 p-4 rounded-2xl flex items-center justify-between shadow-sm transition-all">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
@@ -467,11 +426,68 @@
     </div>
 
     <script>
+        // Dados dos alunos agrupados por turma regida pelo professor logado (Issue #62)
+        const classStudentsData = {
+            '3a-lp': [
+                { id: '01', initials: 'AC', name: 'Ana Clara Oliveira' },
+                { id: '02', initials: 'BH', name: 'Bruno Henrique Lima' },
+                { id: '03', initials: 'CS', name: 'Carla Souza' },
+                { id: '04', initials: 'DS', name: 'Daniel Santos' }
+            ],
+            '3a-mat': [
+                { id: '01', initials: 'AC', name: 'Ana Clara Oliveira' },
+                { id: '02', initials: 'BH', name: 'Bruno Henrique Lima' },
+                { id: '05', initials: 'EF', name: 'Eduardo Ferreira' }
+            ],
+            '3a-his': [
+                { id: '01', initials: 'AC', name: 'Ana Clara Oliveira' },
+                { id: '03', initials: 'CS', name: 'Carla Souza' },
+                { id: '06', initials: 'GV', name: 'Gabriel Vieira' }
+            ]
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+            // Carrega os alunos da turma inicial (Issue #62)
+            loadStudentsForClass('3a-lp');
         });
+
+        // LÓGICA DA ISSUE #62: Carregar alunos da turma do professor logado
+        function loadStudentsForClass(turmaId) {
+            const tbody = document.getElementById('attendance-table-body');
+            const summary = document.getElementById('attendance-summary');
+            const students = classStudentsData[turmaId] || [];
+
+            tbody.innerHTML = '';
+
+            students.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/50 transition-colors attendance-row';
+                tr.innerHTML = `
+                    <td class="py-3.5 px-6">
+                        <div class="flex items-center gap-3">
+                            <span class="text-slate-400 text-[11px] font-semibold w-4">${student.id}</span>
+                            <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 text-[11px] font-bold flex items-center justify-center shrink-0">${student.initials}</div>
+                            <span class="font-bold text-slate-900 student-name">${student.name}</span>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-6">
+                        <div class="flex items-center justify-center gap-1 bg-slate-100 p-1 rounded-xl max-w-[160px] mx-auto">
+                            <button onclick="toggleAttendance(this, 'presence')" class="status-btn-presence active flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>P</span> Presença</button>
+                            <button onclick="toggleAttendance(this, 'absence')" class="status-btn-absence flex-1 py-1 px-2.5 rounded-lg border text-[11px] transition-all flex items-center justify-center gap-1"><span>F</span> Falta</button>
+                        </div>
+                    </td>
+                    <td class="py-3.5 px-6">
+                        <input type="text" placeholder="Adicionar observação..." class="input-obs w-full bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-400" />
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            summary.textContent = `${students.length} alunos regidos nesta turma`;
+        }
 
         function switchTab(tab) {
             const viewChamada = document.getElementById('view-chamada');
@@ -548,7 +564,6 @@
             }
         }
 
-        // LÓGICA DA ISSUE #63: Salvar/Atualizar Frequência em Lote (Upsert)
         function saveAttendanceBatch() {
             const turmaId = document.getElementById('select-turma-chamada').value;
             const dataAula = document.getElementById('input-data-chamada').value;
@@ -570,10 +585,6 @@
                 });
             });
 
-            console.log('--- UPSERT FREQUÊNCIA EM LOTE (ISSUE #63) ---');
-            console.log(frequencyRecords);
-
-            // Exibir mensagem de confirmação
             const alertBox = document.getElementById('attendance-save-alert');
             const alertMsg = document.getElementById('attendance-save-msg');
             
@@ -583,7 +594,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // LÓGICA DA ISSUE #67: Salvar Registros em Lote
         function saveBatchGrades() {
             const bimestre = document.getElementById('select-bimestre').value;
             const fund1Active = !document.getElementById('grade-mode-fund1').classList.contains('hidden');
@@ -611,9 +621,6 @@
                     records.push({ student, bimestre, conceito, parecer });
                 });
             }
-
-            console.log('--- SALVANDO REGISTROS EM LOTE (ISSUE #67) ---');
-            console.log(records);
 
             const alertBox = document.getElementById('batch-save-alert');
             const alertMsg = document.getElementById('batch-save-msg');

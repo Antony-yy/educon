@@ -1,4 +1,4 @@
-import { cadastrarAluno, cadastrarProfessor, cadastrarTurma, atualizarTurma } from '../services/cadastrosService.js';
+import { cadastrarAluno, cadastrarTurma, atualizarTurma } from '../services/cadastrosService.js';
 
 function criarCampo({ id, rotulo, tipo = 'text', opcoes = [] }) {
   const campo = document.createElement('div');
@@ -81,11 +81,4 @@ export function criarModalTurma(onSucesso, turma = null) {
     const input = form.elements.namedItem(chave);
     if (input) input.value = valor;
   });
-}
-
-export function criarModalProfessor(onSucesso) {
-  criarModal('Cadastrar novo docente', [
-    { id: 'nome', rotulo: 'Nome completo' }, { id: 'cpf', rotulo: 'CPF' },
-    { id: 'telefone', rotulo: 'Telefone', tipo: 'tel' }, { id: 'email', rotulo: 'E-mail', tipo: 'email' }
-  ], (dados) => { cadastrarProfessor(dados); onSucesso?.(); }, 'Cadastrar professor');
 }

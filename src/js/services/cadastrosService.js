@@ -1,6 +1,6 @@
 // src/js/services/cadastrosService.js
 import {
-  obterDados, salvarDados, CHAVE_ALUNOS, CHAVE_PROFESSORES,
+  obterDados, salvarDados, CHAVE_ALUNOS,
   CHAVE_TURMAS, CHAVE_USUARIOS
 } from './storageService.js';
 
@@ -122,23 +122,4 @@ export function enturmarAluno(matricula, turmaId) {
   salvarDados(CHAVE_ALUNOS, alunos.map((aluno) => (
     aluno.matricula === matricula ? { ...aluno, turmaId, turmaNome: turma.nome } : aluno
   )));
-}
-
-// --- GESTÃO DE PROFESSORES ---
-export function listarProfessores() {
-  return obterDados(CHAVE_PROFESSORES);
-}
-
-export function cadastrarProfessor(dadosForm) {
-  const professores = obterDados(CHAVE_PROFESSORES);
-
-  const novoProfessor = {
-    id: crypto.randomUUID(),
-    ...dadosForm,
-    ativo: true
-  };
-
-  professores.unshift(novoProfessor);
-  salvarDados(CHAVE_PROFESSORES, professores);
-  return novoProfessor;
 }

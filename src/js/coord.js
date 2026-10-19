@@ -1,11 +1,12 @@
 import '/src/styles/coord.css';
-import { CHAVE_SESSAO } from './config/session.js';
+import { monitorarSessao, protegerRota } from './config/session.js';
 import { ativarLogout } from './services/logout.js';
-import { criarModalAluno, criarModalProfessor, criarModalTurma } from './components/modalCadastro.js';
-import { excluirTurma, listarAlunos, listarProfessores, listarTurmas } from './services/cadastrosService.js';
+import { criarModalAluno, criarModalTurma } from './components/modalCadastro.js';
+import { excluirTurma, listarAlunos, listarTurmas } from './services/cadastrosService.js';
 import { inicializarSeedData } from './services/storageService.js';
 
-if (!sessionStorage.getItem(CHAVE_SESSAO)) window.location.href = '/src/pages/login.html';
+protegerRota(['coordenador']);
+monitorarSessao(['coordenador']);
 
 document.addEventListener('DOMContentLoaded', () => {
   inicializarSeedData();
@@ -17,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('#btn-logout') && ativarLogout(document.querySelector('#btn-logout'));
   document.querySelector('#btn-cadastrar-aluno')?.addEventListener('click', () => criarModalAluno(atualizarTela));
   document.querySelector('#btn-criar-turma')?.addEventListener('click', () => criarModalTurma(atualizarTela));
-  document.querySelector('#tab-professores')?.addEventListener('click', () => criarModalProfessor(atualizarTela));
   document.querySelector('#busca-turma')?.addEventListener('input', renderizarTurmas);
   document.querySelector('#btn-matriculas-alunos')?.addEventListener('click', (evento) => {
     evento.preventDefault();
@@ -47,9 +47,7 @@ function exibirSecao(secao) {
 
 function atualizarContadores() {
   const alunos = listarAlunos();
-  const professores = listarProfessores();
   const turmas = listarTurmas();
-  document.querySelector('#badge-professores').textContent = professores.length;
   document.querySelector('.stat_value_alunos').textContent = `${alunos.length} aluno${alunos.length === 1 ? '' : 's'}`;
   document.querySelector('#stat-turmas').textContent = `${turmas.length} turma${turmas.length === 1 ? '' : 's'}`;
 }

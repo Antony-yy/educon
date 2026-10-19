@@ -7,6 +7,8 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         login: fileURLToPath(new URL('./src/pages/login.html', import.meta.url)),
+        coord: fileURLToPath(new URL('./src/pages/coord.html', import.meta.url)),
+        aluno: fileURLToPath(new URL('./src/pages/aluno.html', import.meta.url)),
       },
     },
   },

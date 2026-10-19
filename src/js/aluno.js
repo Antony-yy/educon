@@ -1,4 +1,3 @@
-import '/src/styles/coord.css';
 import { CHAVE_SESSAO, monitorarSessao, protegerRota } from './config/session.js';
 import { atualizarSenhaAluno, listarAlunos, listarNotasDoAluno } from './services/cadastrosService.js';
 import { ativarLogout } from './services/logout.js';

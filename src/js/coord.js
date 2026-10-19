@@ -1,4 +1,3 @@
-import '/src/styles/coord.css';
 import { monitorarSessao, protegerRota } from './config/session.js';
 import { ativarLogout } from './services/logout.js';
 import { criarModalAluno, criarModalTurma } from './components/modalCadastro.js';

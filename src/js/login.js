@@ -1,5 +1,4 @@
 
-import '/src/styles/login.css';
 import { mostrarErro, limparErro } from './components/fieldError.js';
 import { CHAVE_SESSAO } from './config/session.js';
 import { inicializarSeedData, obterDados, CHAVE_USUARIOS } from './services/storageService.js';

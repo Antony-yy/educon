@@ -1,19 +1,21 @@
-import { cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos } from '../services/cadastrosService.js';
+import {
+  cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos, TURMAS_POR_SEGMENTO
+} from '../services/cadastrosService.js';
 
-function criarCampo({ id, rotulo, tipo = 'text', opcoes = [] }) {
+function criarCampo({ id, rotulo, tipo = 'text', opcoes = [], selecao = false }) {
   const campo = document.createElement('div');
   campo.className = 'field';
   const label = document.createElement('label');
   label.className = 'field_label';
   label.htmlFor = id;
   label.textContent = `${rotulo} *`;
-  const input = opcoes.length ? document.createElement('select') : document.createElement('input');
+  const input = opcoes.length || selecao ? document.createElement('select') : document.createElement('input');
   input.className = 'field_input';
   input.id = id;
   input.name = id;
   input.required = true;
   if (opcoes.length) opcoes.forEach(({ valor, texto }) => input.add(new Option(texto, valor)));
-  else input.type = tipo;
+  else if (!selecao) input.type = tipo;
   campo.append(label, input);
   return campo;
 }
@@ -99,14 +101,27 @@ export function criarModalAluno(onSucesso) {
 
 export function criarModalTurma(onSucesso, turma = null) {
   const form = criarModal(turma ? 'Editar turma' : 'Criar nova turma', [
-    { id: 'nome', rotulo: 'Nome da turma' },
     { id: 'segmento', rotulo: 'Segmento', opcoes: [{ valor: 'Educação Infantil', texto: 'Educação Infantil' }, { valor: 'Ensino Fundamental I', texto: 'Ensino Fundamental I' }] },
+    { id: 'nome', rotulo: 'Turma', selecao: true },
     { id: 'turno', rotulo: 'Turno', opcoes: [{ valor: 'Matutino', texto: 'Matutino' }, { valor: 'Vespertino', texto: 'Vespertino' }] },
     { id: 'professor', rotulo: 'Professor regente' },
     criarSeletorAlunos(turma)
   ], (dados) => { turma ? atualizarTurma(turma.id, dados) : cadastrarTurma(dados); onSucesso?.(); }, turma ? 'Salvar alterações' : 'Criar turma');
-  if (turma) Object.entries(turma).forEach(([chave, valor]) => {
-    const input = form.elements.namedItem(chave);
-    if (input) input.value = valor;
-  });
+  const campoSegmento = form.querySelector('#segmento');
+  const campoNome = form.querySelector('#nome');
+  const atualizarTurmas = (nomeSelecionado = '') => {
+    const turmas = TURMAS_POR_SEGMENTO[campoSegmento.value] || [];
+    campoNome.replaceChildren(...turmas.map((nome) => new Option(nome, nome)));
+    campoNome.value = turmas.includes(nomeSelecionado) ? nomeSelecionado : turmas[0];
+  };
+  if (turma) {
+    Object.entries(turma).forEach(([chave, valor]) => {
+      if (chave !== 'nome') {
+        const input = form.elements.namedItem(chave);
+        if (input) input.value = valor;
+      }
+    });
+    atualizarTurmas(turma.nome);
+  } else atualizarTurmas();
+  campoSegmento.addEventListener('change', () => atualizarTurmas());
 }

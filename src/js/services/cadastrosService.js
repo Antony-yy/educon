@@ -4,6 +4,13 @@ import {
   CHAVE_TURMAS, CHAVE_USUARIOS
 } from './storageService.js';
 
+export const TURMAS_POR_SEGMENTO = {
+  'Educação Infantil': ['Infantil 1', 'Infantil 2', 'Infantil 3', 'Alfabetização'],
+  'Ensino Fundamental I': Array.from({ length: 5 }, (_, indice) => (
+    ['A', 'B', 'C'].map((letra) => `${indice + 1}º Ano ${letra}`)
+  )).flat()
+};
+
 // --- GESTÃO DE ALUNOS ---
 export function listarAlunos() {
   return obterDados(CHAVE_ALUNOS);
@@ -81,6 +88,7 @@ export function listarTurmas() {
 
 export function cadastrarTurma(dadosForm) {
   const turmas = listarTurmas();
+  validarNomeDaTurma(dadosForm);
   const nomeNormalizado = dadosForm.nome.trim().toLocaleLowerCase();
   if (turmas.some((turma) => turma.nome.toLocaleLowerCase() === nomeNormalizado)) {
     throw new Error('Já existe uma turma com este nome.');
@@ -95,6 +103,7 @@ export function cadastrarTurma(dadosForm) {
 
 export function atualizarTurma(id, dadosForm) {
   const turmas = listarTurmas();
+  validarNomeDaTurma(dadosForm);
   const existeNome = turmas.some((turma) => (
     turma.id !== id && turma.nome.toLocaleLowerCase() === dadosForm.nome.trim().toLocaleLowerCase()
   ));
@@ -108,6 +117,12 @@ export function atualizarTurma(id, dadosForm) {
 
   sincronizarAlunosDaTurma(turmaAtualizada, matriculas);
   return turmaAtualizada;
+}
+
+function validarNomeDaTurma({ segmento, nome }) {
+  if (!TURMAS_POR_SEGMENTO[segmento]?.includes(nome)) {
+    throw new Error('Selecione uma turma válida para o segmento informado.');
+  }
 }
 
 function sincronizarAlunosDaTurma(turma, matriculasSelecionadas) {

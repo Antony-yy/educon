@@ -570,6 +570,10 @@ button {
   background: #fafbfd;
 }
 
+.lista-turmas--carregando {
+  display: none;
+}
+
 .class-name {
   font-size: 0.78rem;
   font-weight: 700;

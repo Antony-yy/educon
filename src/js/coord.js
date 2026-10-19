@@ -60,6 +60,7 @@ function criarCelula(conteudo) {
 
 function renderizarTurmas() {
   const corpo = document.querySelector('#lista-turmas');
+  corpo.classList.remove('lista-turmas--carregando');
   const termo = document.querySelector('#busca-turma').value.trim().toLocaleLowerCase();
   const turmas = listarTurmas().filter((turma) => [turma.nome, turma.segmento, turma.professor, turma.turno]
     .some((valor) => valor.toLocaleLowerCase().includes(termo)));

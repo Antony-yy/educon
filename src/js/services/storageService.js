@@ -3,6 +3,7 @@
 const CHAVE_USUARIOS = 'educon_usuarios';
 const CHAVE_ALUNOS = 'educon_alunos';
 const CHAVE_TURMAS = 'educon_turmas';
+const CHAVE_PROFESSORES = 'educon_professores';
 
 
 export function inicializarSeedData() {
@@ -40,6 +41,14 @@ export function inicializarSeedData() {
   if (!localStorage.getItem(CHAVE_TURMAS)) {
     salvarDados(CHAVE_TURMAS, []);
   }
+
+  if (!localStorage.getItem(CHAVE_PROFESSORES)) {
+    salvarDados(CHAVE_PROFESSORES, [
+      { id: 'prof-1', nome: 'Prof.ª Helena Lima' },
+      { id: 'prof-2', nome: 'Prof.ª Beatriz Alves' },
+      { id: 'prof-3', nome: 'Prof.ª Ana Paula' }
+    ]);
+  }
 }
 
 export function obterDados(chave) {
@@ -50,4 +59,4 @@ export function salvarDados(chave, dados) {
   localStorage.setItem(chave, JSON.stringify(dados));
 }
 
-export { CHAVE_USUARIOS, CHAVE_ALUNOS, CHAVE_TURMAS };
+export { CHAVE_USUARIOS, CHAVE_ALUNOS, CHAVE_TURMAS, CHAVE_PROFESSORES };

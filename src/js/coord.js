@@ -2,7 +2,7 @@ import '/src/styles/coord.css';
 import { monitorarSessao, protegerRota } from './config/session.js';
 import { ativarLogout } from './services/logout.js';
 import { criarModalAluno, criarModalTurma } from './components/modalCadastro.js';
-import { excluirTurma, listarAlunos, listarTurmas } from './services/cadastrosService.js';
+import { excluirAluno, excluirTurma, listarAlunos, listarTurmas } from './services/cadastrosService.js';
 import { inicializarSeedData } from './services/storageService.js';
 
 protegerRota(['coordenador']);
@@ -104,7 +104,7 @@ function renderizarAlunos() {
   if (!alunos.length) {
     const linha = document.createElement('tr');
     const celula = criarCelula(termo ? 'Nenhum aluno encontrado.' : 'Ainda não há alunos matriculados.');
-    celula.colSpan = 5; celula.className = 'empty-table'; linha.append(celula); corpo.append(linha);
+    celula.colSpan = 6; celula.className = 'empty-table'; linha.append(celula); corpo.append(linha);
     return;
   }
   alunos.forEach((aluno) => {
@@ -112,9 +112,20 @@ function renderizarAlunos() {
     const nome = document.createElement('p'); nome.className = 'class-name'; nome.textContent = aluno.nome;
     const email = document.createElement('p'); email.className = 'class-level'; email.textContent = aluno.email;
     const descricao = document.createElement('div'); descricao.append(nome, email);
+    const excluir = document.createElement('button');
+    excluir.type = 'button'; excluir.className = 'btn-icon btn-danger';
+    excluir.setAttribute('aria-label', `Excluir matrícula de ${aluno.nome}`);
+    excluir.innerHTML = '<i class="bi bi-trash"></i>';
+    excluir.addEventListener('click', () => {
+      if (window.confirm(`Excluir a matrícula de ${aluno.nome}? Esta ação também remove o acesso do aluno.`)) {
+        excluirAluno(aluno.matricula);
+        atualizarContadores();
+        renderizarAlunos();
+      }
+    });
     linha.append(
       criarCelula(descricao), criarCelula(aluno.matricula), criarCelula(aluno.turmaNome || 'Não Enturmado'),
-      criarCelula(aluno.nomeResponsavel), criarCelula(aluno.telefone)
+      criarCelula(aluno.nomeResponsavel), criarCelula(aluno.telefone), criarCelula(excluir)
     );
     corpo.append(linha);
   });

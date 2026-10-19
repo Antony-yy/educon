@@ -788,6 +788,48 @@ button {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.seletor-busca {
+  margin-top: 0.35rem;
+}
+
+.seletor-alunos {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.seletor-aluno {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.8rem;
+  font-size: 0.82rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.seletor-aluno + .seletor-aluno {
+  border-top: 1px solid #e2e8f0;
+}
+
+.seletor-aluno:hover {
+  background: #eff6ff;
+}
+
+.seletor-aluno input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #2563eb;
+}
+
+.seletor-vazio {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;

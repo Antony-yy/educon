@@ -1,12 +1,23 @@
 // src/js/services/cadastrosService.js
 import {
-  obterDados, salvarDados, CHAVE_ALUNOS,
+  obterDados, salvarDados, CHAVE_ALUNOS, CHAVE_PROFESSORES,
   CHAVE_TURMAS, CHAVE_USUARIOS
 } from './storageService.js';
+
+export const TURMAS_POR_SEGMENTO = {
+  'Educação Infantil': ['Infantil 1', 'Infantil 2', 'Infantil 3', 'Alfabetização'],
+  'Ensino Fundamental I': Array.from({ length: 5 }, (_, indice) => (
+    ['A', 'B', 'C'].map((letra) => `${indice + 1}º Ano ${letra}`)
+  )).flat()
+};
 
 // --- GESTÃO DE ALUNOS ---
 export function listarAlunos() {
   return obterDados(CHAVE_ALUNOS);
+}
+
+export function listarProfessores() {
+  return obterDados(CHAVE_PROFESSORES);
 }
 
 export function cadastrarAluno(dadosForm) {
@@ -65,6 +76,12 @@ export function atualizarSenhaAluno(matricula, senhaAtual, novaSenha) {
   salvarDados(CHAVE_USUARIOS, usuarios);
 }
 
+// Ação provisória para a gestão de matrículas.
+export function excluirAluno(matricula) {
+  salvarDados(CHAVE_ALUNOS, listarAlunos().filter((aluno) => aluno.matricula !== matricula));
+  salvarDados(CHAVE_USUARIOS, obterDados(CHAVE_USUARIOS).filter((usuario) => usuario.matricula !== matricula));
+}
+
 // --- GESTÃO DE TURMAS (CRUD) ---
 export function listarTurmas() {
   return obterDados(CHAVE_TURMAS);
@@ -72,18 +89,22 @@ export function listarTurmas() {
 
 export function cadastrarTurma(dadosForm) {
   const turmas = listarTurmas();
+  validarNomeDaTurma(dadosForm);
   const nomeNormalizado = dadosForm.nome.trim().toLocaleLowerCase();
   if (turmas.some((turma) => turma.nome.toLocaleLowerCase() === nomeNormalizado)) {
     throw new Error('Já existe uma turma com este nome.');
   }
 
-  const novaTurma = { id: crypto.randomUUID(), ...dadosForm, nome: dadosForm.nome.trim() };
+  const { matriculas = [], ...dadosTurma } = dadosForm;
+  const novaTurma = { id: crypto.randomUUID(), ...dadosTurma, nome: dadosForm.nome.trim() };
   salvarDados(CHAVE_TURMAS, [novaTurma, ...turmas]);
+  atualizarAlunosDaTurma(novaTurma, matriculas);
   return novaTurma;
 }
 
 export function atualizarTurma(id, dadosForm) {
   const turmas = listarTurmas();
+  validarNomeDaTurma(dadosForm);
   const existeNome = turmas.some((turma) => (
     turma.id !== id && turma.nome.toLocaleLowerCase() === dadosForm.nome.trim().toLocaleLowerCase()
   ));
@@ -91,15 +112,26 @@ export function atualizarTurma(id, dadosForm) {
 
   const turmaAnterior = turmas.find((turma) => turma.id === id);
   if (!turmaAnterior) throw new Error('Turma não encontrada.');
-  const turmaAtualizada = { ...turmaAnterior, ...dadosForm, nome: dadosForm.nome.trim() };
+  const { matriculas = [], ...dadosTurma } = dadosForm;
+  const turmaAtualizada = { ...turmaAnterior, ...dadosTurma, nome: dadosForm.nome.trim() };
   salvarDados(CHAVE_TURMAS, turmas.map((turma) => turma.id === id ? turmaAtualizada : turma));
-
-  if (turmaAnterior.nome !== turmaAtualizada.nome) {
-    salvarDados(CHAVE_ALUNOS, listarAlunos().map((aluno) => (
-      aluno.turmaId === id ? { ...aluno, turmaNome: turmaAtualizada.nome } : aluno
-    )));
-  }
+  atualizarAlunosDaTurma(turmaAtualizada, matriculas);
   return turmaAtualizada;
+}
+
+function validarNomeDaTurma({ segmento, nome }) {
+  if (!TURMAS_POR_SEGMENTO[segmento]?.includes(nome)) {
+    throw new Error('Selecione uma turma válida para o segmento informado.');
+  }
+}
+
+function atualizarAlunosDaTurma(turma, matriculasSelecionadas) {
+  const matriculas = new Set(matriculasSelecionadas);
+  salvarDados(CHAVE_ALUNOS, listarAlunos().map((aluno) => {
+    if (matriculas.has(aluno.matricula)) return { ...aluno, turmaId: turma.id, turmaNome: turma.nome };
+    if (aluno.turmaId === turma.id) return { ...aluno, turmaId: null, turmaNome: 'Não Enturmado' };
+    return aluno;
+  }));
 }
 
 export function excluirTurma(id) {

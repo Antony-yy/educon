@@ -32,13 +32,13 @@
             <p class="nav_label">Navegação</p>
             <ul class="nav_list">
               <li>
-                <a class="nav_link nav_link--active" href="#" aria-current="page">
+                <a id="btn-gestao-turmas" class="nav_link nav_link--active" href="#turmas" aria-current="page">
                   <i class="bi bi-card-text"></i>
                   <span>Gestão de Turmas</span>
                 </a>
               </li>
               <li>
-                <a class="nav_link" href="#">
+                <a id="btn-matriculas-alunos" class="nav_link" href="#matriculas">
                   <i class="bi bi-people"></i>
                   <span>Matrículas de Alunos</span>
                 </a>
@@ -71,10 +71,10 @@
             <span>Fechar Ano Letivo</span>
           </button>
 
-          <a class="logout" href="index.html">
+          <button id="btn-logout" class="logout" type="button">
             <i class="bi bi-box-arrow-left"></i>
             <span>Sair do sistema</span>
-          </a>
+          </button>
         </div>
       </aside>
 
@@ -87,26 +87,26 @@
           </div>
 
           <div class="page-header_actions">
-            <button class="btn btn--ghost" type="button">
+            <button id="btn-cadastrar-aluno" class="btn btn--ghost" type="button">
               <i class="bi bi-plus-lg"></i>
               Cadastrar aluno
             </button>
-            <button class="btn btn--primary" type="button">
+            <button id="btn-criar-turma" class="btn btn--primary" type="button">
               <i class="bi bi-plus-lg"></i>
               Criar nova turma
             </button>
           </div>
         </header>
 
-        <div class="tabs" role="tablist" aria-label="Seções do painel">
+        <div id="tabs-painel" class="tabs" role="tablist" aria-label="Seções do painel">
           <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true">
             <i class="bi bi-card-text"></i>
             Gestão de turmas
           </button>
-          <button class="tabs_item" type="button" role="tab" aria-selected="false">
+          <button id="tab-professores" class="tabs_item" type="button" role="tab" aria-selected="false">
             <i class="bi bi-people"></i>
             Gestão de professores
-            <span class="tabs_badge">8</span>
+            <span class="tabs_badge" id="badge-professores">0</span>
           </button>
           <button class="tabs_item" type="button" role="tab" aria-selected="false">
             <i class="bi bi-calendar3"></i>
@@ -115,14 +115,14 @@
         </div>
 
         <!-- Cards de resumo -->
-        <section class="stats" aria-label="Resumo geral">
+        <section id="resumo-painel" class="stats" aria-label="Resumo geral">
           <article class="stat">
             <div class="stat_icon stat_icon--blue">
               <i class="bi bi-card-text"></i>
             </div>
             <div class="stat_info">
               <p class="stat_label">Total de turmas</p>
-              <p class="stat_value">8 turmas</p>
+              <p id="stat-turmas" class="stat_value">0 turmas</p>
             </div>
           </article>
 
@@ -132,7 +132,7 @@
             </div>
             <div class="stat_info">
               <p class="stat_label">Alunos matriculados</p>
-              <p class="stat_value">190 alunos</p>
+              <p class="stat_value stat_value_alunos">0 alunos</p>
             </div>
           </article>
 
@@ -152,7 +152,7 @@
         </section>
 
         <!-- Tabela de turmas -->
-        <section class="panel" aria-labelledby="turmas-title">
+        <section id="painel-turmas" class="panel" aria-labelledby="turmas-title">
           <header class="panel_header">
             <div>
               <h2 id="turmas-title" class="panel_title">Turmas ativas</h2>
@@ -161,7 +161,7 @@
 
             <div class="search">
               <i class="bi bi-search search_icon"></i>
-              <input class="search_input" type="search" placeholder="Buscar turma..." aria-label="Buscar turma" />
+              <input id="busca-turma" class="search_input" type="search" placeholder="Buscar turma..." aria-label="Buscar turma" />
             </div>
           </header>
 
@@ -176,7 +176,7 @@
                   <th scope="col">Ações</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="lista-turmas">
                 <tr>
                   <td>
                     <p class="class-name">Infantil 3</p>
@@ -305,6 +305,25 @@
                   </td>
                 </tr>
               </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="painel-alunos" class="panel painel-oculto" aria-labelledby="alunos-title">
+          <header class="panel_header">
+            <div>
+              <h2 id="alunos-title" class="panel_title">Alunos matriculados</h2>
+              <p class="panel_subtitle">Consulte as matrículas e as turmas dos alunos cadastrados</p>
+            </div>
+            <div class="search">
+              <i class="bi bi-search search_icon"></i>
+              <input id="busca-aluno" class="search_input" type="search" placeholder="Buscar aluno ou matrícula..." aria-label="Buscar aluno" />
+            </div>
+          </header>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th scope="col">Aluno</th><th scope="col">Matrícula</th><th scope="col">Turma</th><th scope="col">Responsável</th><th scope="col">Contato</th></tr></thead>
+              <tbody id="lista-alunos"></tbody>
             </table>
           </div>
         </section>

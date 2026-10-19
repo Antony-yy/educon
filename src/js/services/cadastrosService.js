@@ -56,7 +56,8 @@ export function cadastrarAluno(dadosForm) {
     senha: senhaInicial, // Senha inicial
     nome: dadosForm.nome,
     perfil: 'aluno',
-    matricula: matricula
+    matricula: matricula,
+    primeiroAcesso: true
   };
 
   usuarios.push(usuarioAluno);
@@ -65,15 +66,17 @@ export function cadastrarAluno(dadosForm) {
   return { ...novoAluno, senhaInicial };
 }
 
-export function atualizarSenhaAluno(matricula, senhaAtual, novaSenha) {
+export function atualizarSenhaAluno(matricula, novaSenha) {
   const usuarios = obterDados(CHAVE_USUARIOS);
-  const indice = usuarios.findIndex((usuario) => (
-    usuario.matricula === matricula && usuario.senha === senhaAtual
-  ));
+  const indice = usuarios.findIndex((usuario) => usuario.matricula === matricula);
 
-  if (indice === -1) throw new Error('A senha atual está incorreta.');
-  usuarios[indice] = { ...usuarios[indice], senha: novaSenha };
+  if (indice === -1) throw new Error('Usuário não encontrado.');
+  usuarios[indice] = { ...usuarios[indice], senha: novaSenha, primeiroAcesso: false };
   salvarDados(CHAVE_USUARIOS, usuarios);
+}
+
+export function listarNotasDoAluno(matricula) {
+  return obterDados('educon_notas').filter((nota) => nota.matricula === matricula);
 }
 
 // Ação provisória para a gestão de matrículas.

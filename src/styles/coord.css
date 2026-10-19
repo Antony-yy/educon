@@ -875,3 +875,32 @@ button {
 .aluno-card h1 { margin: 0.35rem 0; }
 .aluno-card > p { color: #64748b; }
 .aluno-card .form-modal { margin: 1.5rem 0; }
+
+.modal-backdrop[hidden] { display: none; }
+
+.aluno-sidebar .profile_avatar {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+}
+.aluno-sidebar .nav_link { width: 100%; border: 0; background: transparent; text-align: left; }
+.aluno-sidebar .nav_link--active { background: #2563eb; }
+.boletim-painel { margin-top: 1.5rem; }
+.boletim-painel .panel_header { padding-bottom: 1rem; }
+.boletim-table th:not(:first-child), .boletim-table td:not(:first-child) { text-align: center; }
+.boletim-table td:first-child { font-weight: 600; }
+.boletim-rodape { display: flex; gap: 0.5rem; padding: 1rem 1.4rem; font-size: 0.72rem; color: #64748b; background: #f8fafc; border-top: 1px solid #eef0f4; }
+.senha-aviso { margin: 0 0 1rem; padding: 0.8rem; font-size: 0.82rem; color: #92400e; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; }
+
+@media (max-width: 860px) {
+  .aluno-sidebar { position: static; }
+  .aluno-sidebar .nav_list { flex-direction: row; overflow-x: auto; }
+  .aluno-sidebar .nav_link { min-width: max-content; }
+  .aluno-content .page-header_actions { width: 100%; margin-top: 0; }
+  .aluno-content .page-header_actions .btn { flex: 1; padding: 0 0.8rem; }
+}
+
+@media print {
+  .aluno-sidebar, .page-header_actions, .tabs, #modal-senha { display: none !important; }
+  .content { padding: 0; }
+  .panel { border: 0; box-shadow: none; }
+}

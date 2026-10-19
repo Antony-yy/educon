@@ -49,6 +49,21 @@ export function inicializarSeedData() {
       { id: 'prof-3', nome: 'Prof.ª Ana Paula' }
     ]);
   }
+
+  // Cria contas iniciais para alunos já salvos, sem sobrescrever senhas alteradas.
+  const usuarios = obterDados(CHAVE_USUARIOS);
+  const alunos = obterDados(CHAVE_ALUNOS);
+  const alunosSemConta = alunos.filter((aluno) => !usuarios.some((usuario) => usuario.matricula === aluno.matricula));
+  if (alunosSemConta.length) {
+    salvarDados(CHAVE_USUARIOS, [...usuarios, ...alunosSemConta.map((aluno) => ({
+      usuario: aluno.matricula,
+      senha: aluno.matricula,
+      nome: aluno.nome,
+      perfil: 'aluno',
+      matricula: aluno.matricula,
+      primeiroAcesso: true
+    }))]);
+  }
 }
 
 export function obterDados(chave) {

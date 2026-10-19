@@ -27,6 +27,11 @@ function calcularMedia(nota) {
   return valores.length ? (valores.reduce((soma, valor) => soma + valor, 0) / valores.length).toFixed(1).replace('.', ',') : '—';
 }
 
+function exibirConceito(valor) {
+  const conceito = String(valor || '').trim().toUpperCase();
+  return ['D', 'EM', 'ND'].includes(conceito) ? conceito : '—';
+}
+
 function renderizarBoletim() {
   const semTurma = document.querySelector('#sem-turma');
   const tabela = document.querySelector('#tabela-boletim');
@@ -34,15 +39,23 @@ function renderizarBoletim() {
   if (turma === 'Não Enturmado') { semTurma.hidden = false; tabela.hidden = true; return; }
   semTurma.hidden = true; tabela.hidden = false;
   const notas = listarNotasDoAluno(sessao.matricula);
-  const disciplinas = aluno?.segmento === 'PREZINHO'
+  const usaConceitos = aluno?.segmento === 'PREZINHO';
+  const disciplinas = usaConceitos
     ? ['Linguagem', 'Matemática', 'Natureza e Sociedade']
     : ['Língua Portuguesa', 'Matemática', 'Ciências', 'História', 'Geografia'];
+  document.querySelector('#coluna-final').textContent = usaConceitos ? 'Conceito final' : 'Média';
+  document.querySelector('#legenda-conceitos').hidden = !usaConceitos;
   const corpo = document.querySelector('#notas-aluno');
   corpo.replaceChildren();
   disciplinas.forEach((disciplina) => {
     const nota = notas.find((item) => item.disciplina === disciplina) || {};
     const linha = document.createElement('tr');
-    linha.append(criarCelula(disciplina), criarCelula(nota.bimestre1), criarCelula(nota.bimestre2), criarCelula(nota.bimestre3), criarCelula(nota.bimestre4), criarCelula(calcularMedia(nota)));
+    const bimestres = ['bimestre1', 'bimestre2', 'bimestre3', 'bimestre4'];
+    const valores = bimestres.map((campo) => usaConceitos ? exibirConceito(nota[campo]) : (nota[campo] ?? '—'));
+    const final = usaConceitos
+      ? [...valores].reverse().find((conceito) => conceito !== '—') || '—'
+      : calcularMedia(nota);
+    linha.append(criarCelula(disciplina), ...valores.map(criarCelula), criarCelula(final));
     corpo.append(linha);
   });
 }

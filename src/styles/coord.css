@@ -701,6 +701,11 @@ button {
   padding: 16px;
 }
 
+/* Mantém modais realmente ocultos quando o atributo hidden é aplicado via JavaScript. */
+.modal-backdrop[hidden] {
+  display: none;
+}
+
 .modal-content {
   background: #ffffff;
   border-radius: 16px;
@@ -709,6 +714,8 @@ button {
   padding: 28px;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
   animation: modalEntrada 0.25s ease-out;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 }
 
 @keyframes modalEntrada {
@@ -788,6 +795,28 @@ button {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+.seletor-alunos {
+  display: flex;
+  flex-direction: column;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.seletor-aluno {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.8rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.seletor-aluno + .seletor-aluno {
+  border-top: 1px solid #e2e8f0;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -833,3 +862,145 @@ button {
 .aluno-card h1 { margin: 0.35rem 0; }
 .aluno-card > p { color: #64748b; }
 .aluno-card .form-modal { margin: 1.5rem 0; }
+
+.boletim {
+  margin: 1.5rem 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.boletim h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.boletim-turma {
+  margin: 0.35rem 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.boletim-aviso {
+  margin: 1rem 0 0;
+  padding: 0.85rem;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+}
+
+.aluno-sidebar .profile_avatar {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 6px 14px rgba(5, 150, 105, 0.35);
+}
+
+.aluno-sidebar .nav_link {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+
+.aluno-sidebar .nav_link--active {
+  background: #2563eb;
+}
+
+.boletim-painel {
+  margin-top: 1.5rem;
+}
+
+.boletim-painel .panel_header {
+  padding-bottom: 1rem;
+}
+
+.boletim-table th:not(:first-child),
+.boletim-table td:not(:first-child) {
+  text-align: center;
+}
+
+.boletim-table td:first-child {
+  font-weight: 600;
+}
+
+.boletim-rodape {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.4rem;
+  font-size: 0.72rem;
+  color: #64748b;
+  background: #f8fafc;
+  border-top: 1px solid #eef0f4;
+}
+
+.senha-aviso {
+  margin: 0 0 1rem;
+  padding: 0.8rem;
+  font-size: 0.82rem;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+}
+
+@media (max-width: 860px) {
+  .aluno-sidebar {
+    position: static;
+  }
+
+  .aluno-sidebar .nav_list {
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .aluno-sidebar .nav_link {
+    min-width: max-content;
+  }
+
+  .aluno-sidebar .sidebar_bottom {
+    margin-top: 0.8rem;
+  }
+
+  .aluno-content .page-header_actions {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .aluno-content .page-header_actions .btn {
+    flex: 1;
+    padding: 0 0.8rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .content {
+    padding: 1.25rem 0.85rem 1.5rem;
+  }
+
+  .page-header_actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .page-header_actions .btn {
+    flex: 1 1 100%;
+  }
+
+  .modal-content {
+    padding: 1.25rem;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+}
+
+@media print {
+  .aluno-sidebar, .page-header_actions, .tabs, #modal-senha { display: none !important; }
+  .content { padding: 0; }
+  .panel { border: 0; box-shadow: none; }
+}

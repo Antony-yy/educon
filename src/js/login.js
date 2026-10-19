@@ -54,3 +54,4 @@ form.addEventListener('submit', (event) => {
 
 inputUsuario.addEventListener('input', () => limparErro(inputUsuario));
 inputSenha.addEventListener('input', () => limparErro(inputSenha));
+import '/src/styles/login.css';

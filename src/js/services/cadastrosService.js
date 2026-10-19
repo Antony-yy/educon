@@ -45,7 +45,8 @@ export function cadastrarAluno(dadosForm) {
     senha: senhaInicial, // Senha inicial
     nome: dadosForm.nome,
     perfil: 'aluno',
-    matricula: matricula
+    matricula: matricula,
+    primeiroAcesso: true
   };
 
   usuarios.push(usuarioAluno);
@@ -54,15 +55,23 @@ export function cadastrarAluno(dadosForm) {
   return { ...novoAluno, senhaInicial };
 }
 
-export function atualizarSenhaAluno(matricula, senhaAtual, novaSenha) {
+export function atualizarSenhaAluno(matricula, novaSenha) {
   const usuarios = obterDados(CHAVE_USUARIOS);
-  const indice = usuarios.findIndex((usuario) => (
-    usuario.matricula === matricula && usuario.senha === senhaAtual
-  ));
+  const indice = usuarios.findIndex((usuario) => usuario.matricula === matricula);
 
-  if (indice === -1) throw new Error('A senha atual está incorreta.');
-  usuarios[indice] = { ...usuarios[indice], senha: novaSenha };
+  if (indice === -1) throw new Error('Usuário não encontrado.');
+  usuarios[indice] = { ...usuarios[indice], senha: novaSenha, primeiroAcesso: false };
   salvarDados(CHAVE_USUARIOS, usuarios);
+}
+
+export function listarNotasDoAluno(matricula) {
+  return obterDados('educon_notas').filter((nota) => nota.matricula === matricula);
+}
+
+// Ação provisória para a tela de matrículas.
+export function excluirAluno(matricula) {
+  salvarDados(CHAVE_ALUNOS, listarAlunos().filter((aluno) => aluno.matricula !== matricula));
+  salvarDados(CHAVE_USUARIOS, obterDados(CHAVE_USUARIOS).filter((usuario) => usuario.matricula !== matricula));
 }
 
 // --- GESTÃO DE TURMAS (CRUD) ---
@@ -77,8 +86,10 @@ export function cadastrarTurma(dadosForm) {
     throw new Error('Já existe uma turma com este nome.');
   }
 
-  const novaTurma = { id: crypto.randomUUID(), ...dadosForm, nome: dadosForm.nome.trim() };
+  const { matriculas = [], ...dadosTurma } = dadosForm;
+  const novaTurma = { id: crypto.randomUUID(), ...dadosTurma, nome: dadosForm.nome.trim() };
   salvarDados(CHAVE_TURMAS, [novaTurma, ...turmas]);
+  sincronizarAlunosDaTurma(novaTurma, matriculas);
   return novaTurma;
 }
 
@@ -91,15 +102,21 @@ export function atualizarTurma(id, dadosForm) {
 
   const turmaAnterior = turmas.find((turma) => turma.id === id);
   if (!turmaAnterior) throw new Error('Turma não encontrada.');
-  const turmaAtualizada = { ...turmaAnterior, ...dadosForm, nome: dadosForm.nome.trim() };
+  const { matriculas = [], ...dadosTurma } = dadosForm;
+  const turmaAtualizada = { ...turmaAnterior, ...dadosTurma, nome: dadosForm.nome.trim() };
   salvarDados(CHAVE_TURMAS, turmas.map((turma) => turma.id === id ? turmaAtualizada : turma));
 
-  if (turmaAnterior.nome !== turmaAtualizada.nome) {
-    salvarDados(CHAVE_ALUNOS, listarAlunos().map((aluno) => (
-      aluno.turmaId === id ? { ...aluno, turmaNome: turmaAtualizada.nome } : aluno
-    )));
-  }
+  sincronizarAlunosDaTurma(turmaAtualizada, matriculas);
   return turmaAtualizada;
+}
+
+function sincronizarAlunosDaTurma(turma, matriculasSelecionadas) {
+  const matriculas = new Set(matriculasSelecionadas);
+  salvarDados(CHAVE_ALUNOS, listarAlunos().map((aluno) => {
+    if (matriculas.has(aluno.matricula)) return { ...aluno, turmaId: turma.id, turmaNome: turma.nome };
+    if (aluno.turmaId === turma.id) return { ...aluno, turmaId: null, turmaNome: 'Não Enturmado' };
+    return aluno;
+  }));
 }
 
 export function excluirTurma(id) {

@@ -40,6 +40,25 @@ export function inicializarSeedData() {
   if (!localStorage.getItem(CHAVE_TURMAS)) {
     salvarDados(CHAVE_TURMAS, []);
   }
+
+  // Garante a conta inicial de alunos que já estavam cadastrados.
+  // Contas existentes não são alteradas, preservando senhas já trocadas.
+  const usuarios = obterDados(CHAVE_USUARIOS);
+  const alunos = obterDados(CHAVE_ALUNOS);
+  const alunosSemConta = alunos.filter((aluno) => !usuarios.some((usuario) => usuario.matricula === aluno.matricula));
+  if (alunosSemConta.length) {
+    salvarDados(CHAVE_USUARIOS, [
+      ...usuarios,
+      ...alunosSemConta.map((aluno) => ({
+        usuario: aluno.matricula,
+        senha: aluno.matricula,
+        nome: aluno.nome,
+        perfil: 'aluno',
+        matricula: aluno.matricula,
+        primeiroAcesso: true
+      }))
+    ]);
+  }
 }
 
 export function obterDados(chave) {

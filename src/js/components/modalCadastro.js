@@ -1,4 +1,4 @@
-import { cadastrarAluno, cadastrarTurma, atualizarTurma } from '../services/cadastrosService.js';
+import { cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos } from '../services/cadastrosService.js';
 
 function criarCampo({ id, rotulo, tipo = 'text', opcoes = [] }) {
   const campo = document.createElement('div');
@@ -18,6 +18,31 @@ function criarCampo({ id, rotulo, tipo = 'text', opcoes = [] }) {
   return campo;
 }
 
+function criarSeletorAlunos(turma) {
+  const alunos = listarAlunos().filter((aluno) => (
+    aluno.turmaId === turma?.id || (!aluno.turmaId && aluno.turmaNome === 'Não Enturmado')
+  ));
+  const campo = document.createElement('div');
+  campo.className = 'field';
+  const titulo = document.createElement('p');
+  titulo.className = 'field_label';
+  titulo.textContent = 'Alunos da turma';
+  const lista = document.createElement('div');
+  lista.className = 'seletor-alunos';
+  if (!alunos.length) lista.textContent = 'Não há alunos disponíveis.';
+  alunos.forEach((aluno) => {
+    const item = document.createElement('label');
+    item.className = 'seletor-aluno';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox'; checkbox.name = 'matriculas'; checkbox.value = aluno.matricula;
+    checkbox.checked = aluno.turmaId === turma?.id;
+    item.append(checkbox, document.createTextNode(`${aluno.nome} — ${aluno.matricula}`));
+    lista.append(item);
+  });
+  campo.append(titulo, lista);
+  return campo;
+}
+
 function criarModal(titulo, campos, aoEnviar, textoBotao) {
   document.querySelector('.modal-backdrop')?.remove();
   const backdrop = document.createElement('div');
@@ -33,7 +58,7 @@ function criarModal(titulo, campos, aoEnviar, textoBotao) {
   cabecalho.append(heading, fechar);
   const form = document.createElement('form');
   form.className = 'form-modal';
-  campos.forEach((campo) => form.append(criarCampo(campo)));
+  campos.forEach((campo) => form.append(campo instanceof Node ? campo : criarCampo(campo)));
   const mensagem = document.createElement('p');
   mensagem.className = 'form-message';
   const acoes = document.createElement('div');
@@ -53,7 +78,9 @@ function criarModal(titulo, campos, aoEnviar, textoBotao) {
   backdrop.addEventListener('click', (evento) => { if (evento.target === backdrop) remover(); });
   form.addEventListener('submit', (evento) => {
     evento.preventDefault();
-    const dados = Object.fromEntries(new FormData(form));
+    const formData = new FormData(form);
+    const dados = Object.fromEntries(formData);
+    dados.matriculas = formData.getAll('matriculas');
     try { aoEnviar(dados); remover(); } catch (erro) { mensagem.textContent = erro.message; }
   });
   return form;
@@ -75,7 +102,8 @@ export function criarModalTurma(onSucesso, turma = null) {
     { id: 'nome', rotulo: 'Nome da turma' },
     { id: 'segmento', rotulo: 'Segmento', opcoes: [{ valor: 'Educação Infantil', texto: 'Educação Infantil' }, { valor: 'Ensino Fundamental I', texto: 'Ensino Fundamental I' }] },
     { id: 'turno', rotulo: 'Turno', opcoes: [{ valor: 'Matutino', texto: 'Matutino' }, { valor: 'Vespertino', texto: 'Vespertino' }] },
-    { id: 'professor', rotulo: 'Professor regente' }
+    { id: 'professor', rotulo: 'Professor regente' },
+    criarSeletorAlunos(turma)
   ], (dados) => { turma ? atualizarTurma(turma.id, dados) : cadastrarTurma(dados); onSucesso?.(); }, turma ? 'Salvar alterações' : 'Criar turma');
   if (turma) Object.entries(turma).forEach(([chave, valor]) => {
     const input = form.elements.namedItem(chave);

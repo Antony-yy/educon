@@ -1,6 +1,6 @@
 import {
-  cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos, listarProfessores,
-  TURMAS_POR_SEGMENTO
+  cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos,
+  listarProfessoresAtivos, cadastrarProfessor, TURMAS_POR_SEGMENTO
 } from '../services/cadastrosService.js';
 
 function criarCampo({ id, rotulo, tipo = 'text', opcoes = [], multiplo = false, obrigatorio = true, selecao = false }) {

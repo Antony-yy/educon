@@ -27,17 +27,57 @@ export function listarProfessoresAtivos() {
   return listarProfessores().filter(ehAtivo);
 }
 
-export function cadastrarProfessor({ nome, email }) {
+const somenteDigitos = (valor = '') => String(valor).replace(/\D/g, '');
+
+export function validarCpf(cpf) {
+  const d = somenteDigitos(cpf);
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+  const digito = (qtd) => {
+    let soma = 0;
+    for (let i = 0; i < qtd; i++) soma += Number(d[i]) * (qtd + 1 - i);
+    const resto = (soma * 10) % 11;
+    return resto === 10 ? 0 : resto;
+  };
+  return digito(9) === Number(d[9]) && digito(10) === Number(d[10]);
+}
+
+export function formatarCpf(cpf = '') {
+  return somenteDigitos(cpf).replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+}
+
+export function formatarTelefone(telefone = '') {
+  const d = somenteDigitos(telefone);
+  if (d.length === 11) return d.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  if (d.length === 10) return d.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+  return d;
+}
+
+export function cadastrarProfessor({ nome, email, cpf, telefone }) {
   const nomeLimpo = nome?.trim();
   const emailLimpo = email?.trim().toLocaleLowerCase();
+  const cpfLimpo = somenteDigitos(cpf);
+  const telefoneLimpo = somenteDigitos(telefone);
+
   if (!nomeLimpo || !emailLimpo) throw new Error('Informe nome e e-mail.');
+  if (!validarCpf(cpfLimpo)) throw new Error('CPF inválido.');
+  if (![10, 11].includes(telefoneLimpo.length)) throw new Error('Telefone inválido. Informe DDD + número.');
 
   const professores = listarProfessores();
   if (professores.some((p) => p.email?.toLocaleLowerCase() === emailLimpo)) {
     throw new Error('Já existe um professor com este e-mail.');
   }
+  if (professores.some((p) => p.cpf === cpfLimpo)) {
+    throw new Error('Já existe um professor com este CPF.');
+  }
 
-  const novoProfessor = { id: crypto.randomUUID(), nome: nomeLimpo, email: emailLimpo, ativo: true };
+  const novoProfessor = {
+    id: crypto.randomUUID(),
+    nome: nomeLimpo,
+    email: emailLimpo,
+    cpf: cpfLimpo,          // salvo só com dígitos; formate ao exibir
+    telefone: telefoneLimpo,
+    ativo: true
+  };
   salvarDados(CHAVE_PROFESSORES, [novoProfessor, ...professores]);
   return novoProfessor;
 }

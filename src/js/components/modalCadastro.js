@@ -147,3 +147,10 @@ export function criarModalTurma(onSucesso, turma = null) {
   } else atualizarTurmasDisponiveis();
   campoSegmento.addEventListener('change', () => atualizarTurmasDisponiveis());
 }
+
+export function criarModalProfessor(onSucesso) {
+  criarModal('Cadastrar novo professor', [
+    { id: 'nome', rotulo: 'Nome completo' },
+    { id: 'email', rotulo: 'E-mail institucional', tipo: 'email' }
+  ], (dados) => { cadastrarProfessor(dados); onSucesso?.(); }, 'Salvar professor');
+}

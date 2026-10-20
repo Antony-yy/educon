@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Painel do Coordenador · Colégio Primeiro Sol, João Pessoa, Paraíba." />
-    <title>EDUCON | Coordenação</title>
-    <link rel="icon" href="/primeiro-sol.svg" type="image/svg+xml" />
+    <title>Primeiro Sol | Painel do Coordenador</title>
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/styles/coord.css" />
   </head>
 
@@ -14,10 +14,10 @@
       <aside class="sidebar" aria-label="Menu lateral">
         <div class="sidebar_top">
           <div class="brand">
-            <img class="brand_logo" src="/educon.svg" alt="Símbolo do EDUCON" width="56" height="56" />
+            <img class="brand_logo" src="/logo.svg" alt="" width="40" height="40" />
             <div class="brand_text">
-              <p class="brand_name">EDUCON</p>
-              <p class="brand_tag">Plataforma acadêmica</p>
+              <p class="brand_name">Primeiro Sol</p>
+              <p class="brand_tag">Sistema EDUCON</p>
             </div>
           </div>
 
@@ -33,19 +33,19 @@
             <p class="nav_label">Navegação</p>
             <ul class="nav_list">
               <li>
-                <a id="btn-gestao-turmas" class="nav_link nav_link--active" href="#turmas" aria-current="page">
+                <a id="btn-gestao-turmas" class="nav_link nav_link--active" href="#turmas" data-nav="turmas" aria-current="page">
                   <i class="bi bi-card-text"></i>
                   <span>Gestão de Turmas</span>
                 </a>
               </li>
               <li>
-                <a id="btn-matriculas-alunos" class="nav_link" href="#matriculas">
+                <a id="btn-matriculas-alunos" class="nav_link" href="#matriculas" data-nav="alunos">
                   <i class="bi bi-people"></i>
                   <span>Matrículas de Alunos</span>
                 </a>
               </li>
               <li>
-                <a class="nav_link" href="professores.html">
+                <a id="btn-gestao-professores" class="nav_link" href="#professores" data-nav="professores">
                   <i class="bi bi-person-badge"></i>
                   <span>Gestão de Professores</span>
                 </a>
@@ -90,7 +90,7 @@
           <div class="page-header_text">
             <p class="eyebrow">Colégio Primeiro Sol · João Pessoa · Paraíba</p>
             <h1 class="page-title">Painel do Coordenador</h1>
-            <p class="page-subtitle">Gerencie turmas, alunos e o período escolar em um só lugar.</p>
+            <p class="page-subtitle">Gerencie turmas, alunos, professores e o período escolar em um só lugar.</p>
           </div>
 
           <div class="page-header_actions">
@@ -98,7 +98,11 @@
               <i class="bi bi-plus-lg"></i>
               Cadastrar aluno
             </button>
-            <button id="btn-criar-turma" class="btn btn--primary" type="button">
+            <button id="btn-cadastrar-professor" class="btn btn--primary painel-oculto" type="button" data-secao="professores">
+              <i class="bi bi-plus-lg"></i>
+              Cadastrar professor
+            </button>
+            <button id="btn-criar-turma" class="btn btn--primary" type="button" data-secao="turmas">
               <i class="bi bi-plus-lg"></i>
               Criar nova turma
             </button>
@@ -106,14 +110,15 @@
         </header>
 
         <div id="tabs-painel" class="tabs" role="tablist" aria-label="Seções do painel">
-          <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true">
+          <button id="tab-turmas" class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true" data-tab="turmas">
             <i class="bi bi-card-text"></i>
             Gestão de turmas
           </button>
-          <a class="tabs_item" href="professores.html" role="tab" aria-selected="false">
+          <button id="tab-professores" class="tabs_item" type="button" role="tab" aria-selected="false" data-tab="professores">
             <i class="bi bi-people"></i>
             Gestão de professores
-          </a>
+            <span class="tabs_badge" id="tabs-badge">0</span>
+          </button>
           <button class="tabs_item" type="button" role="tab" aria-selected="false">
             <i class="bi bi-calendar3"></i>
             Horários
@@ -121,7 +126,7 @@
         </div>
 
         <!-- Cards de resumo -->
-        <section id="resumo-painel" class="stats" aria-label="Resumo geral">
+        <section id="resumo-painel" class="stats" aria-label="Resumo geral" data-secao="turmas">
           <article class="stat">
             <div class="stat_icon stat_icon--blue">
               <i class="bi bi-card-text"></i>
@@ -158,7 +163,7 @@
         </section>
 
         <!-- Tabela de turmas -->
-        <section id="painel-turmas" class="panel" aria-labelledby="turmas-title">
+        <section id="painel-turmas" class="panel" aria-labelledby="turmas-title" data-secao="turmas">
           <header class="panel_header">
             <div>
               <h2 id="turmas-title" class="panel_title">Turmas ativas</h2>
@@ -315,7 +320,7 @@
           </div>
         </section>
 
-        <section id="painel-alunos" class="panel painel-oculto" aria-labelledby="alunos-title">
+        <section id="painel-alunos" class="panel painel-oculto" aria-labelledby="alunos-title" data-secao="alunos">
           <header class="panel_header">
             <div>
               <h2 id="alunos-title" class="panel_title">Alunos matriculados</h2>
@@ -330,6 +335,62 @@
             <table class="table">
               <thead><tr><th scope="col">Aluno</th><th scope="col">Matrícula</th><th scope="col">Turma</th><th scope="col">Responsável</th><th scope="col">Contato</th><th scope="col">Ações</th></tr></thead>
               <tbody id="lista-alunos"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Resumo dos professores -->
+        <section id="resumo-professores" class="stats painel-oculto" aria-label="Resumo dos professores" data-secao="professores">
+          <article class="stat">
+            <div class="stat_icon stat_icon--blue"><i class="bi bi-person-badge"></i></div>
+            <div class="stat_info">
+              <p class="stat_label">Total de Professores</p>
+              <p class="stat_value" id="stat-total">0 docentes</p>
+            </div>
+          </article>
+
+          <article class="stat">
+            <div class="stat_icon stat_icon--green"><i class="bi bi-check-circle"></i></div>
+            <div class="stat_info">
+              <p class="stat_label">Professores Ativos</p>
+              <p class="stat_value" id="stat-ativos">0 ativos</p>
+            </div>
+          </article>
+
+          <article class="stat">
+            <div class="stat_icon stat_icon--purple"><i class="bi bi-pause-circle"></i></div>
+            <div class="stat_info">
+              <p class="stat_label">Professores Inativos</p>
+              <p class="stat_value" id="stat-inativos">0 inativos</p>
+            </div>
+          </article>
+        </section>
+
+        <!-- Quadro de professores (linhas geradas por coord.js) -->
+        <section id="painel-professores" class="panel painel-oculto" aria-labelledby="professores-title" data-secao="professores">
+          <header class="panel_header">
+            <div>
+              <h2 id="professores-title" class="panel_title">Quadro de Professores</h2>
+              <p class="panel_subtitle">Docentes cadastrados e situação contratual no sistema</p>
+            </div>
+            <div class="search">
+              <i class="bi bi-search search_icon"></i>
+              <input id="busca-professor" class="search_input" type="search" placeholder="Buscar professor..." aria-label="Buscar professor" />
+            </div>
+          </header>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Nome</th>
+                  <th scope="col">CPF</th>
+                  <th scope="col">E-mail</th>
+                  <th scope="col">Telefone</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="lista-professores"></tbody>
             </table>
           </div>
         </section>

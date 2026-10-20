@@ -1,48 +1,70 @@
 import '/src/styles/coord.css';
+import '/src/styles/professores.css';
 import { monitorarSessao, protegerRota } from './config/session.js';
 import { ativarLogout } from './services/logout.js';
-import { criarModalAluno, criarModalTurma } from './components/modalCadastro.js';
-import { excluirAluno, excluirTurma, listarAlunos, listarTurmas } from './services/cadastrosService.js';
+import { criarModalAluno, criarModalTurma, criarModalProfessor } from './components/modalCadastro.js';
+import {
+  alterarStatusProfessor, excluirAluno, excluirTurma, formatarCpf, formatarTelefone,
+  listarAlunos, listarProfessores, listarTurmas
+} from './services/cadastrosService.js';
 import { inicializarSeedData } from './services/storageService.js';
 
 protegerRota(['coordenador']);
 monitorarSessao(['coordenador']);
+
+const SECOES = ['turmas', 'alunos', 'professores'];
+const SECOES_COM_ABAS = ['turmas', 'professores'];
 
 document.addEventListener('DOMContentLoaded', () => {
   inicializarSeedData();
   const atualizarTela = () => {
     atualizarContadores();
     renderizarTurmas();
-    if (!document.querySelector('#painel-alunos').classList.contains('painel-oculto')) renderizarAlunos();
+    renderizarAlunos();
+    renderizarProfessores();
   };
   document.querySelector('#btn-logout') && ativarLogout(document.querySelector('#btn-logout'));
   document.querySelector('#btn-cadastrar-aluno')?.addEventListener('click', () => criarModalAluno(atualizarTela));
   document.querySelector('#btn-criar-turma')?.addEventListener('click', () => criarModalTurma(atualizarTela));
+  document.querySelector('#btn-cadastrar-professor')?.addEventListener('click', () => criarModalProfessor(atualizarTela));
   document.querySelector('#busca-turma')?.addEventListener('input', renderizarTurmas);
-  document.querySelector('#btn-matriculas-alunos')?.addEventListener('click', (evento) => {
-    evento.preventDefault();
-    exibirSecao('alunos');
-  });
-  document.querySelector('#btn-gestao-turmas')?.addEventListener('click', (evento) => {
-    evento.preventDefault();
-    exibirSecao('turmas');
-  });
   document.querySelector('#busca-aluno')?.addEventListener('input', renderizarAlunos);
+  document.querySelector('#busca-professor')?.addEventListener('input', renderizarProfessores);
+
+  // Menu lateral e abas apontam para as mesmas seções.
+  document.querySelectorAll('[data-nav]').forEach((link) => link.addEventListener('click', (evento) => {
+    evento.preventDefault();
+    exibirSecao(link.dataset.nav);
+  }));
+  document.querySelectorAll('[data-tab]').forEach((aba) => aba.addEventListener('click', () => exibirSecao(aba.dataset.tab)));
+
+  window.addEventListener('hashchange', () => exibirSecao(secaoDoHash()));
   atualizarTela();
+  exibirSecao(secaoDoHash());
 });
 
+function secaoDoHash() {
+  const secao = window.location.hash.replace('#', '');
+  return secao === 'matriculas' ? 'alunos' : (SECOES.includes(secao) ? secao : 'turmas');
+}
+
 function exibirSecao(secao) {
-  const mostrandoAlunos = secao === 'alunos';
-  document.querySelector('#painel-alunos').classList.toggle('painel-oculto', !mostrandoAlunos);
-  document.querySelector('#tabs-painel').classList.toggle('painel-oculto', mostrandoAlunos);
-  document.querySelector('#resumo-painel').classList.toggle('painel-oculto', mostrandoAlunos);
-  document.querySelector('#painel-turmas').classList.toggle('painel-oculto', mostrandoAlunos);
-  document.querySelector('#btn-criar-turma').classList.toggle('painel-oculto', mostrandoAlunos);
-  document.querySelector('#btn-matriculas-alunos').classList.toggle('nav_link--active', mostrandoAlunos);
-  document.querySelector('#btn-gestao-turmas').classList.toggle('nav_link--active', !mostrandoAlunos);
-  document.querySelector('#btn-matriculas-alunos').toggleAttribute('aria-current', mostrandoAlunos);
-  document.querySelector('#btn-gestao-turmas').toggleAttribute('aria-current', !mostrandoAlunos);
-  if (mostrandoAlunos) renderizarAlunos();
+  document.querySelectorAll('[data-secao]').forEach((elemento) => {
+    elemento.classList.toggle('painel-oculto', elemento.dataset.secao !== secao);
+  });
+  document.querySelector('#tabs-painel').classList.toggle('painel-oculto', !SECOES_COM_ABAS.includes(secao));
+  document.querySelectorAll('[data-tab]').forEach((aba) => {
+    const ativa = aba.dataset.tab === secao;
+    aba.classList.toggle('tabs_item--active', ativa);
+    aba.setAttribute('aria-selected', String(ativa));
+  });
+  document.querySelectorAll('[data-nav]').forEach((link) => {
+    const ativo = link.dataset.nav === secao;
+    link.classList.toggle('nav_link--active', ativo);
+    if (ativo) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+  });
+  // Guarda a seção na URL para o F5 manter a aba (replaceState não dispara hashchange).
+  if (window.location.hash !== `#${secao}`) history.replaceState(null, '', `#${secao}`);
 }
 
 function atualizarContadores() {
@@ -50,6 +72,77 @@ function atualizarContadores() {
   const turmas = listarTurmas();
   document.querySelector('.stat_value_alunos').textContent = `${alunos.length} aluno${alunos.length === 1 ? '' : 's'}`;
   document.querySelector('#stat-turmas').textContent = `${turmas.length} turma${turmas.length === 1 ? '' : 's'}`;
+  atualizarContadoresProfessores();
+}
+
+// --- PROFESSORES ---
+// Professores do seed antigo não têm o campo "ativo": contam como ativos.
+const ehAtivo = (professor) => professor.ativo !== false;
+const plural = (qtd, singular, pluralTxt) => `${qtd} ${qtd === 1 ? singular : pluralTxt}`;
+
+function atualizarContadoresProfessores() {
+  const professores = listarProfessores();
+  const ativos = professores.filter(ehAtivo).length;
+  document.querySelector('#stat-total').textContent = plural(professores.length, 'docente', 'docentes');
+  document.querySelector('#stat-ativos').textContent = plural(ativos, 'ativo', 'ativos');
+  document.querySelector('#stat-inativos').textContent = plural(professores.length - ativos, 'inativo', 'inativos');
+  document.querySelector('#tabs-badge').textContent = professores.length;
+}
+
+function criarBadgeStatus(ativo) {
+  const badge = document.createElement('span');
+  badge.className = `status-badge status-badge--${ativo ? 'active' : 'inactive'}`;
+  const ponto = document.createElement('span');
+  ponto.className = 'status-dot';
+  badge.append(ponto, ativo ? ' Ativo' : ' Inativo');
+  return badge;
+}
+
+function criarAcoesProfessor(professor) {
+  const ativo = ehAtivo(professor);
+  const botao = document.createElement('button');
+  botao.type = 'button';
+  botao.className = `btn-sm ${ativo ? 'btn-sm--danger' : 'btn-sm--success'}`;
+  botao.textContent = ativo ? 'Desativar' : 'Ativar';
+  botao.addEventListener('click', () => {
+    alterarStatusProfessor(professor.id, !ativo);
+    atualizarContadoresProfessores();
+    renderizarProfessores();
+  });
+  const acoes = document.createElement('div');
+  acoes.className = 'actions';
+  acoes.append(botao);
+  return acoes;
+}
+
+function renderizarProfessores() {
+  const corpo = document.querySelector('#lista-professores');
+  const termo = document.querySelector('#busca-professor').value.trim().toLocaleLowerCase();
+  const professores = listarProfessores()
+    .filter((p) => [p.nome, p.email, formatarCpf(p.cpf), formatarTelefone(p.telefone)]
+      .some((valor) => (valor || '').toLocaleLowerCase().includes(termo)))
+    .sort((a, b) => Number(ehAtivo(b)) - Number(ehAtivo(a)) || a.nome.localeCompare(b.nome, 'pt-BR'));
+  corpo.replaceChildren();
+  if (!professores.length) {
+    const linha = document.createElement('tr');
+    const celula = criarCelula(termo ? 'Nenhum professor encontrado.' : 'Nenhum professor cadastrado.');
+    celula.colSpan = 6; celula.className = 'empty-table'; linha.append(celula); corpo.append(linha);
+    return;
+  }
+  professores.forEach((professor) => {
+    const linha = document.createElement('tr');
+    const nome = criarCelula(professor.nome); nome.className = 'teacher-name';
+    const secundaria = (texto) => { const celula = criarCelula(texto || '—'); celula.className = 'teacher-email'; return celula; };
+    linha.append(
+      nome,
+      secundaria(formatarCpf(professor.cpf)),
+      secundaria(professor.email),
+      secundaria(formatarTelefone(professor.telefone)),
+      criarCelula(criarBadgeStatus(ehAtivo(professor))),
+      criarCelula(criarAcoesProfessor(professor))
+    );
+    corpo.append(linha);
+  });
 }
 
 function criarCelula(conteudo) {

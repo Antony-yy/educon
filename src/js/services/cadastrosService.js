@@ -16,8 +16,36 @@ export function listarAlunos() {
   return obterDados(CHAVE_ALUNOS);
 }
 
+// --- GESTÃO DE PROFESSORES ---
+const ehAtivo = (professor) => professor.ativo !== false; // seed antigo sem "ativo" conta como ativo
+
 export function listarProfessores() {
   return obterDados(CHAVE_PROFESSORES);
+}
+
+export function listarProfessoresAtivos() {
+  return listarProfessores().filter(ehAtivo);
+}
+
+export function cadastrarProfessor({ nome, email }) {
+  const nomeLimpo = nome?.trim();
+  const emailLimpo = email?.trim().toLocaleLowerCase();
+  if (!nomeLimpo || !emailLimpo) throw new Error('Informe nome e e-mail.');
+
+  const professores = listarProfessores();
+  if (professores.some((p) => p.email?.toLocaleLowerCase() === emailLimpo)) {
+    throw new Error('Já existe um professor com este e-mail.');
+  }
+
+  const novoProfessor = { id: crypto.randomUUID(), nome: nomeLimpo, email: emailLimpo, ativo: true };
+  salvarDados(CHAVE_PROFESSORES, [novoProfessor, ...professores]);
+  return novoProfessor;
+}
+
+export function alterarStatusProfessor(id, ativo) {
+  const professores = listarProfessores();
+  if (!professores.some((p) => p.id === id)) throw new Error('Professor não encontrado.');
+  salvarDados(CHAVE_PROFESSORES, professores.map((p) => (p.id === id ? { ...p, ativo } : p)));
 }
 
 export function cadastrarAluno(dadosForm) {

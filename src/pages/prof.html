@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Painel do Professor · Diário de classe e lançamento de notas · Colégio Primeiro Sol, João Pessoa, Paraíba." />
+    <title>EDUCON | Painel do professor</title>
+    <link rel="icon" href="/primeiro-sol.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/coord.css" />
+    <link rel="stylesheet" href="/src/styles/professores.css" />
+    <link rel="stylesheet" href="/src/styles/prof.css" />
+  </head>
+
+  <body>
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Menu lateral">
+        <div class="sidebar_top">
+          <div class="brand">
+            <img class="brand_logo" src="/educon.svg" alt="Símbolo do EDUCON" width="56" height="56" />
+            <div class="brand_text">
+              <p class="brand_name">EDUCON</p>
+              <p class="brand_tag">Plataforma acadêmica</p>
+            </div>
+          </div>
+
+          <div class="profile">
+            <div class="profile_avatar" id="prof-avatar" aria-hidden="true">PR</div>
+            <div class="profile_text">
+              <p class="profile_name" id="prof-nome">Professor(a)</p>
+              <p class="profile_role">Professor regente</p>
+            </div>
+          </div>
+
+          <nav class="nav" aria-label="Navegação principal">
+            <p class="nav_label">Navegação</p>
+            <ul class="nav_list">
+              <li>
+                <a class="nav_link nav_link--active" href="#diario" data-tab="diario">
+                  <i class="bi bi-journal-check"></i>
+                  <span>Diário de Classe</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link" href="#notas" data-tab="notas">
+                  <i class="bi bi-bar-chart"></i>
+                  <span>Lançamento de Notas</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link" href="#">
+                  <i class="bi bi-calendar3"></i>
+                  <span>Meus Horários</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="sidebar_bottom">
+          <button id="btn-logout" class="logout" type="button">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Sair do sistema</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Conteúdo principal -->
+      <main class="content">
+        <header class="page-header">
+          <div class="page-header_text">
+            <p class="eyebrow">Colégio Primeiro Sol · João Pessoa · Paraíba</p>
+            <h1 class="page-title">Painel do Professor</h1>
+            <p class="page-subtitle">Registre a frequência e lance as notas das turmas que você rege.</p>
+          </div>
+        </header>
+
+        <div class="tabs" role="tablist" aria-label="Seções do painel">
+          <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true" data-tab="diario">
+            <i class="bi bi-journal-check"></i>
+            Diário de classe
+          </button>
+          <button class="tabs_item" type="button" role="tab" aria-selected="false" data-tab="notas">
+            <i class="bi bi-bar-chart"></i>
+            Lançamento de notas
+          </button>
+        </div>
+
+        <p id="aviso" class="prof-aviso" role="status" hidden></p>
+
+        <!-- Diário de classe: UC14 (#59 a #63) -->
+        <section class="panel" data-painel="diario" aria-labelledby="diario-title">
+          <header class="panel_header">
+            <div>
+              <h2 id="diario-title" class="panel_title">Chamada e frequência</h2>
+              <p id="chamada-resumo" class="panel_subtitle">Escolha a turma e a data da aula.</p>
+            </div>
+            <button id="btn-salvar-chamada" class="btn btn--primary" type="button">
+              <i class="bi bi-save"></i>
+              Salvar chamada diária
+            </button>
+          </header>
+
+          <div class="prof-filtros">
+            <label class="prof-campo">
+              <span>Turma</span>
+              <select id="chamada-turma" class="prof-controle"></select>
+            </label>
+            <label class="prof-campo">
+              <span>Data da aula</span>
+              <input id="chamada-data" class="prof-controle" type="date" />
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Aluno</th>
+                  <th scope="col">Presença</th>
+                  <th scope="col">Observação</th>
+                </tr>
+              </thead>
+              <tbody id="chamada-corpo"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Lançamento de notas: UC15 (#64 e #65) -->
+        <section class="panel" data-painel="notas" aria-labelledby="notas-title" hidden>
+          <header class="panel_header">
+            <div>
+              <h2 id="notas-title" class="panel_title">Notas e avaliações</h2>
+              <p id="notas-resumo" class="panel_subtitle">Escolha a turma e o bimestre.</p>
+            </div>
+            <button id="btn-salvar-notas" class="btn btn--primary" type="button">
+              <i class="bi bi-save"></i>
+              Salvar lançamentos
+            </button>
+          </header>
+
+          <div class="prof-filtros">
+            <label class="prof-campo">
+              <span>Turma</span>
+              <select id="notas-turma" class="prof-controle"></select>
+            </label>
+            <label class="prof-campo">
+              <span>Bimestre</span>
+              <select id="notas-bimestre" class="prof-controle"></select>
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table prof-tabela-notas" id="notas-tabela"></table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/src/js/prof.js"></script>
+  </body>
+</html>

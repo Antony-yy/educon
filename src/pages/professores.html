@@ -19,10 +19,10 @@
       <aside class="sidebar" aria-label="Menu lateral">
         <div class="sidebar_top">
           <div class="brand">
-            <img class="brand_logo" src="/logo.svg" alt="" width="40" height="40" />
+            <img class="brand_logo" src="/educon.svg" alt="Símbolo do EDUCON" width="56" height="56" />
             <div class="brand_text">
-              <p class="brand_name">Primeiro Sol</p>
-              <p class="brand_tag">Sistema EDUCON</p>
+              <p class="brand_name">EDUCON</p>
+              <p class="brand_tag">Plataforma acadêmica</p>
             </div>
           </div>
 
@@ -38,15 +38,21 @@
             <p class="nav_label">Navegação</p>
             <ul class="nav_list">
               <li>
-                <a class="nav_link nav_link--active" href="coord.html" aria-current="page">
+                <a class="nav_link" href="coord.html">
                   <i class="bi bi-card-text"></i>
                   <span>Gestão de Turmas</span>
                 </a>
               </li>
               <li>
-                <a class="nav_link" href="#">
+                <a class="nav_link" href="coord.html">
                   <i class="bi bi-people"></i>
                   <span>Matrículas de Alunos</span>
+                </a>
+              </li>
+              <li>
+                <a class="nav_link nav_link--active" href="professores.html" aria-current="page">
+                  <i class="bi bi-person-badge"></i>
+                  <span>Gestão de Professores</span>
                 </a>
               </li>
               <li>
@@ -77,10 +83,10 @@
             <span>Fechar Ano Letivo</span>
           </button>
 
-          <a class="logout" href="index.html">
+          <button id="btn-logout" class="logout" type="button">
             <i class="bi bi-box-arrow-left"></i>
             <span>Sair do sistema</span>
-          </a>
+          </button>
         </div>
       </aside>
 
@@ -110,7 +116,7 @@
           <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true">
             <i class="bi bi-people"></i>
             Gestão de professores
-            <span class="tabs_badge">8</span>
+            <span class="tabs_badge" id="tabs-badge">0</span>
           </button>
           <button class="tabs_item" type="button" role="tab" aria-selected="false">
             <i class="bi bi-calendar3"></i>
@@ -126,7 +132,7 @@
             </div>
             <div class="stat_info">
               <p class="stat_label">Total de Professores</p>
-              <p class="stat_value">8 docentes</p>
+              <p class="stat_value" id="stat-total">0 docentes</p>
             </div>
           </article>
 
@@ -136,7 +142,7 @@
             </div>
             <div class="stat_info">
               <p class="stat_label">Professores Ativos</p>
-              <p class="stat_value">7 ativos</p>
+              <p class="stat_value" id="stat-ativos">0 ativos</p>
             </div>
           </article>
 
@@ -146,7 +152,7 @@
             </div>
             <div class="stat_info">
               <p class="stat_label">Professores Inativos</p>
-              <p class="stat_value">1 inativo</p>
+              <p class="stat_value" id="stat-inativos">0 inativos</p>
             </div>
           </article>
         </section>
@@ -241,7 +247,7 @@
 
             <div class="search">
               <i class="bi bi-search search_icon"></i>
-              <input class="search_input" type="search" placeholder="Buscar professor..." aria-label="Buscar professor" />
+              <input id="busca-professor" class="search_input" type="search" placeholder="Buscar professor..." aria-label="Buscar professor" />
             </div>
           </header>
 
@@ -250,87 +256,14 @@
               <thead>
                 <tr>
                   <th scope="col">Nome</th>
+                  <th scope="col">CPF</th>
                   <th scope="col">E-mail</th>
+                  <th scope="col">Telefone</th>
                   <th scope="col">Status</th>
                   <th scope="col">Ações</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td class="teacher-name">Prof.ª Helena Lima</td>
-                  <td class="teacher-email">helena.lima@primeirosol.edu.br</td>
-                  <td>
-                    <span class="status-badge status-badge--active">
-                      <span class="status-dot"></span> Ativo
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <button class="btn-sm btn-sm--danger" type="button">Desativar</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="teacher-name">Prof.ª Beatriz Alves</td>
-                  <td class="teacher-email">beatriz.alves@primeirosol.edu.br</td>
-                  <td>
-                    <span class="status-badge status-badge--active">
-                      <span class="status-dot"></span> Ativo
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <button class="btn-sm btn-sm--danger" type="button">Desativar</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="teacher-name">Prof.ª Camila Rocha</td>
-                  <td class="teacher-email">camila.rocha@primeirosol.edu.br</td>
-                  <td>
-                    <span class="status-badge status-badge--active">
-                      <span class="status-dot"></span> Ativo
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <button class="btn-sm btn-sm--danger" type="button">Desativar</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="teacher-name">Prof. João Silva</td>
-                  <td class="teacher-email">joao.silva@primeirosol.edu.br</td>
-                  <td>
-                    <span class="status-badge status-badge--inactive">
-                      <span class="status-dot"></span> Inativo
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <button class="btn-sm btn-sm--success" type="button">Ativar</button>
-                    </div>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td class="teacher-name">Prof.ª Ana Paula</td>
-                  <td class="teacher-email">ana.paula@primeirosol.edu.br</td>
-                  <td>
-                    <span class="status-badge status-badge--active">
-                      <span class="status-dot"></span> Ativo
-                    </span>
-                  </td>
-                  <td>
-                    <div class="actions">
-                      <button class="btn-sm btn-sm--danger" type="button">Desativar</button>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
+              <tbody id="lista-professores"></tbody>
             </table>
           </div>
         </section>

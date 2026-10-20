@@ -3,7 +3,9 @@ import '/src/styles/professores.css';
 import { monitorarSessao, protegerRota } from './config/session.js';
 import { ativarLogout } from './services/logout.js';
 import { criarModalProfessor } from './components/modalCadastro.js';
-import { alterarStatusProfessor, listarProfessores } from './services/cadastrosService.js';
+import {
+  alterarStatusProfessor, listarProfessores, formatarCpf, formatarTelefone
+} from './services/cadastrosService.js';
 import { inicializarSeedData } from './services/storageService.js';
 
 protegerRota(['coordenador']);
@@ -11,6 +13,8 @@ monitorarSessao(['coordenador']);
 
 const corpo = document.querySelector('#lista-professores');
 const campoBusca = document.querySelector('#busca-professor');
+
+// Professores do seed antigo não têm o campo "ativo": contam como ativos.
 const ehAtivo = (professor) => professor.ativo !== false;
 const plural = (qtd, singular, pluralTxt) => `${qtd} ${qtd === 1 ? singular : pluralTxt}`;
 
@@ -60,14 +64,15 @@ function renderizar() {
 
   const termo = campoBusca.value.trim().toLocaleLowerCase();
   const professores = todos
-    .filter((p) => [p.nome, p.email].some((v) => (v || '').toLocaleLowerCase().includes(termo)))
+    .filter((p) => [p.nome, p.email, formatarCpf(p.cpf), formatarTelefone(p.telefone)]
+      .some((valor) => (valor || '').toLocaleLowerCase().includes(termo)))
     .sort((a, b) => Number(ehAtivo(b)) - Number(ehAtivo(a)) || a.nome.localeCompare(b.nome, 'pt-BR'));
 
   corpo.replaceChildren();
   if (!professores.length) {
     const linha = document.createElement('tr');
     const celula = criarCelula(termo ? 'Nenhum professor encontrado.' : 'Nenhum professor cadastrado.', 'empty-table');
-    celula.colSpan = 4;
+    celula.colSpan = 6;
     linha.append(celula);
     corpo.append(linha);
     return;
@@ -77,7 +82,9 @@ function renderizar() {
     const linha = document.createElement('tr');
     linha.append(
       criarCelula(professor.nome, 'teacher-name'),
+      criarCelula(formatarCpf(professor.cpf) || '—'),
       criarCelula(professor.email || '—', 'teacher-email'),
+      criarCelula(formatarTelefone(professor.telefone) || '—'),
       criarCelula(criarBadge(ehAtivo(professor))),
       criarCelula(criarAcoes(professor))
     );

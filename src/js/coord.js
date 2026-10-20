@@ -7,16 +7,36 @@ import {
   alterarStatusProfessor, excluirAluno, excluirTurma, formatarCpf, formatarTelefone,
   listarAlunos, listarProfessores, listarTurmas
 } from './services/cadastrosService.js';
-import { inicializarSeedData } from './services/storageService.js';
+import { CHAVE_USUARIOS, inicializarSeedData, obterDados } from './services/storageService.js';
 
-protegerRota(['coordenador']);
+const sessao = protegerRota(['coordenador']);
 monitorarSessao(['coordenador']);
+
+// Iniciais do nome, ignorando títulos como "Prof.ª", "Dr." (ex.: "Prof.ª Carla Mendes" -> "CM").
+function obterIniciais(nome = '') {
+  const partes = nome.split(/\s+/).filter((parte) => parte && !parte.includes('.'));
+  if (!partes.length) return '?';
+  const primeira = partes[0][0];
+  const ultima = partes.length > 1 ? partes[partes.length - 1][0] : '';
+  return (primeira + ultima).toLocaleUpperCase('pt-BR');
+}
+
+// Mostra no menu lateral o coordenador logado, lido do storage (com a sessão como reserva).
+function preencherPerfil() {
+  if (!sessao) return;
+  const conta = obterDados(CHAVE_USUARIOS).find((usuario) => usuario.usuario === sessao.usuario) || sessao;
+  const nome = conta.nome || sessao.nome || '';
+  document.querySelector('.profile_name').textContent = nome;
+  document.querySelector('.profile_avatar').textContent = obterIniciais(nome);
+  if (conta.cargo) document.querySelector('.profile_role').textContent = conta.cargo;
+}
 
 const SECOES = ['turmas', 'alunos', 'professores'];
 const SECOES_COM_ABAS = ['turmas', 'professores'];
 
 document.addEventListener('DOMContentLoaded', () => {
   inicializarSeedData();
+  preencherPerfil();
   const atualizarTela = () => {
     atualizarContadores();
     renderizarTurmas();

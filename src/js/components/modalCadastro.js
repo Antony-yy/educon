@@ -120,7 +120,7 @@ export function criarModalAluno(onSucesso) {
 }
 
 export function criarModalTurma(onSucesso, turma = null) {
-  const professores = listarProfessores();
+  const professores = listarProfessoresAtivos();
   const opcoesProfessores = professores.map((professor) => ({ valor: professor.nome, texto: professor.nome }));
   const form = criarModal(turma ? 'Editar turma' : 'Criar nova turma', [
     { id: 'segmento', rotulo: 'Segmento', opcoes: [{ valor: 'Educação Infantil', texto: 'Educação Infantil' }, { valor: 'Ensino Fundamental I', texto: 'Ensino Fundamental I' }] },

@@ -7,12 +7,18 @@ const CHAVE_PROFESSORES = 'educon_professores';
 export function inicializarSeedData() {
 
   if (!localStorage.getItem(CHAVE_USUARIOS)) {
-    const usuariosSeed = [
+        const usuariosSeed = [
       {
         usuario: 'carla.mendes',
         senha: '123456',
         nome: 'Prof.ª Carla Mendes',
         perfil: 'coordenador'
+      },
+      {
+        usuario: 'professor.teste',
+        senha: '123456',
+        nome: 'Professor Teste',
+        perfil: 'professor'
       }
     ];
     localStorage.setItem(CHAVE_USUARIOS, JSON.stringify(usuariosSeed));

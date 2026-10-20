@@ -30,7 +30,8 @@ form.addEventListener('submit', (event) => {
     return;
   }
 
-  sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(conta));
+    sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(conta));
+
   if (conta.perfil === 'aluno') {
     window.location.replace('/src/pages/aluno.html');
   } else if (conta.perfil === 'coordenador') {

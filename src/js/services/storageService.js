@@ -15,9 +15,9 @@ export function inicializarSeedData() {
         perfil: 'coordenador'
       },
       {
-        usuario: 'professor.teste',
+        usuario: 'helena',
         senha: '123456',
-        nome: 'Professor Teste',
+        nome: 'Prof.ª Helena Lima',
         perfil: 'professor'
       }
     ];

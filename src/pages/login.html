@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portal acadêmico do Colégio Primeiro Sol, João Pessoa, Paraíba." />
+    <title>Primeiro Sol | Entrar</title>
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles/login.css" />
+  </head>
+
+  <body>
+    <main class="page">
+      <section class="login-card" aria-labelledby="login-title">
+        <header class="login-card_header">
+          <div class="brand">
+            <img class="brand_logo" src="/logo.svg" alt="" width="40" height="40" />
+            <div class="brand_text">
+              <p class="brand_name">Primeiro Sol</p>
+              <p class="brand_tag">Sistema EDUCON</p>
+            </div>
+          </div>
+          <p class="school">Colégio Primeiro Sol · João Pessoa · Paraíba</p>
+          <p class="portal">Portal Acadêmico · Ensino Fundamental</p>
+        </header>
+
+        <div class="login-card_body">
+          <h1 id="login-title" class="title">Boas-vindas</h1>
+          <p class="subtitle">Acesse sua conta para continuar</p>
+
+          <form class="form" id="login-form" action="#" method="post">
+            <div class="field">
+              <label class="field_label" for="perfil">Perfil de acesso</label>
+              <div class="field_control">
+                <i class="bi bi-person field_icon"></i>
+                <select class="field_input" id="perfil" name="perfil">
+                  <option value="coordenador">Coordenador</option>
+                  <option value="professor">Professor</option>
+                  <option value="aluno" selected>Aluno</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="field_label" for="usuario">Usuário</label>
+              <div class="field_control">
+                <i class="bi bi-person field_icon"></i>
+                <input class="field_input" type="text" id="usuario" name="usuario" placeholder="Digite seu usuário" autocomplete="username" />
+              </div>
+              <p class="field_message" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <label class="field_label" for="senha">Senha</label>
+              <div class="field_control">
+                <i class="bi bi-key field_icon"></i>
+                <input class="field_input" type="password" id="senha" name="senha" placeholder="Digite sua senha" autocomplete="current-password" />
+              </div>
+              <p class="field_message" role="alert"></p>
+            </div>
+
+            <a class="forgot" href="#">Esqueceu a senha?</a>
+
+            <button class="btn" type="submit">
+              Acessar o Sistema
+              <i class="bi bi-arrow-right btn_icon"></i>
+            </button>
+          </form>
+        </div>
+
+        <footer class="login-card_footer">
+          <i class="bi bi-shield-check"></i>
+          <span>Ambiente seguro · Tecnologia EDUCON</span>
+        </footer>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <p>© 2026 Colégio Primeiro Sol João Pessoa · Paraíba · Todos os direitos reservados</p>
+    </footer>
+    <script type="module" src="/src/js/login.js"></script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portal do aluno EDUCON" />
+    <title>EDUCON | Meu boletim</title>
+    <link rel="stylesheet" href="/src/styles/coord.css" />
+  </head>
+  <body>
+    <div class="layout aluno-layout">
+      <aside class="sidebar aluno-sidebar" aria-label="Navegação do aluno">
+        <div class="sidebar_top">
+          <div class="brand"><img class="brand_logo" src="/logo.svg" alt="" width="40" height="40" /><div class="brand_text"><p class="brand_name">Primeiro Sol</p><p class="brand_tag">Sistema EDUCON</p></div></div>
+          <div class="profile">
+            <div id="avatar-aluno" class="profile_avatar" aria-hidden="true">AL</div>
+            <div class="profile_text"><p id="nome-perfil" class="profile_name"></p><p id="turma-perfil" class="profile_role"></p></div>
+          </div>
+          <nav class="nav" aria-label="Navegação principal">
+            <p class="nav_label">Navegação</p>
+            <ul class="nav_list">
+              <li><button id="nav-boletim" class="nav_link nav_link--active" type="button"><i class="bi bi-bar-chart-line"></i><span>Meu boletim</span></button></li>
+              <li><button class="nav_link nav-indisponivel" type="button" data-recurso="Horário das aulas"><i class="bi bi-calendar3"></i><span>Horário das aulas</span></button></li>
+              <li><button class="nav_link nav-indisponivel" type="button" data-recurso="Fórum de avisos"><i class="bi bi-chat-square-text"></i><span>Fórum de avisos</span></button></li>
+            </ul>
+          </nav>
+        </div>
+        <div class="sidebar_bottom"><button id="btn-logout" class="logout" type="button"><i class="bi bi-box-arrow-left"></i><span>Sair do sistema</span></button></div>
+      </aside>
+
+      <main class="content aluno-content">
+        <header class="page-header">
+          <div><p class="eyebrow">Colégio Primeiro Sol · Área do aluno</p><h1 class="page-title">Boletim escolar</h1><p class="page-subtitle">Notas e frequência detalhadas por disciplina.</p></div>
+          <div class="page-header_actions"><button id="btn-alterar-senha" class="btn btn--ghost" type="button"><i class="bi bi-key"></i>Alterar senha</button><button id="btn-imprimir" class="btn btn--primary" type="button"><i class="bi bi-printer"></i>Imprimir boletim</button></div>
+        </header>
+
+        <div class="tabs" role="tablist"><button class="tabs_item tabs_item--active" type="button"><i class="bi bi-bar-chart-line"></i>Meu boletim</button><button class="tabs_item nav-indisponivel" type="button" data-recurso="Horário das aulas"><i class="bi bi-calendar3"></i>Horário das aulas</button></div>
+
+        <section id="boletim" class="panel boletim-painel" aria-labelledby="boletim-titulo">
+          <header class="panel_header"><div><h2 id="boletim-titulo" class="panel_title">Notas por disciplina</h2><p id="turma-boletim" class="panel_subtitle"></p></div></header>
+          <p id="sem-turma" class="boletim-aviso" hidden>Você ainda não está em uma turma. O boletim ficará disponível após o enturmamento.</p>
+          <div id="tabela-boletim" class="table-wrap" hidden>
+            <table class="table boletim-table"><thead><tr><th>Disciplina</th><th>1º bim.</th><th>2º bim.</th><th>3º bim.</th><th>4º bim.</th><th id="coluna-final">Média</th></tr></thead><tbody id="notas-aluno"></tbody></table>
+          </div>
+          <footer class="boletim-rodape"><i class="bi bi-shield-lock"></i><span>Este boletim mostra somente suas informações acadêmicas.</span><span id="legenda-conceitos" hidden>Conceitos: D = Desenvolvido · EM = Em desenvolvimento · ND = Não desenvolvido.</span></footer>
+        </section>
+      </main>
+    </div>
+
+    <div id="modal-senha" class="modal-backdrop" hidden>
+      <section class="modal-content" aria-labelledby="titulo-senha" role="dialog" aria-modal="true">
+        <div class="modal-header"><h2 id="titulo-senha">Alterar senha</h2><button id="fechar-senha" class="btn-close" type="button" aria-label="Fechar">&times;</button></div>
+        <p id="aviso-primeiro-acesso" class="senha-aviso" hidden>Primeiro acesso: seu usuário e senha inicial são a matrícula. Defina uma nova senha para continuar.</p>
+        <form id="form-senha" class="form-modal"><div class="field"><label class="field_label" for="nova-senha">Nova senha</label><input class="field_input" id="nova-senha" type="password" minlength="4" required autocomplete="new-password" /></div><p class="form-message" id="mensagem-senha" role="alert"></p><div class="modal-actions"><button id="cancelar-senha" class="btn btn--ghost" type="button">Cancelar</button><button class="btn btn--primary" type="submit">Salvar nova senha</button></div></form>
+      </section>
+    </div>
+    <script type="module" src="/src/js/aluno.js"></script>
+  </body>
+</html>

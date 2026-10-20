@@ -1,9 +1,9 @@
 import {
-  cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos, listarProfessores,
-  TURMAS_POR_SEGMENTO
+  cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos, listarProfessoresAtivos,
+  cadastrarProfessor, TURMAS_POR_SEGMENTO
 } from '../services/cadastrosService.js';
 
-function criarCampo({ id, rotulo, tipo = 'text', opcoes = [], multiplo = false, obrigatorio = true, selecao = false }) {
+function criarCampo({ id, rotulo, tipo = 'text', opcoes = [], multiplo = false, obrigatorio = true, selecao = false, placeholder = '' }) {
   const campo = document.createElement('div');
   campo.className = 'field';
   const label = document.createElement('label');
@@ -15,6 +15,7 @@ function criarCampo({ id, rotulo, tipo = 'text', opcoes = [], multiplo = false, 
   input.id = id;
   input.name = id;
   input.required = obrigatorio;
+  if (placeholder) input.placeholder = placeholder;
   input.multiple = multiplo;
   if (multiplo) input.size = Math.min(Math.max(opcoes.length, 3), 6);
   if (opcoes.length) opcoes.forEach(({ valor, texto }) => input.add(new Option(texto, valor)));
@@ -119,8 +120,18 @@ export function criarModalAluno(onSucesso) {
   ], (dados) => { cadastrarAluno(dados); onSucesso?.(); }, 'Salvar matrícula');
 }
 
+export function criarModalProfessor(onSucesso) {
+  criarModal('Cadastrar novo professor', [
+    { id: 'nome', rotulo: 'Nome completo' },
+    { id: 'cpf', rotulo: 'CPF', placeholder: '000.000.000-00' },
+    { id: 'email', rotulo: 'E-mail institucional', tipo: 'email' },
+    { id: 'telefone', rotulo: 'Telefone', tipo: 'tel', placeholder: '(83) 99999-8888' }
+  ], (dados) => { cadastrarProfessor(dados); onSucesso?.(); }, 'Salvar professor');
+}
+
 export function criarModalTurma(onSucesso, turma = null) {
-  const professores = listarProfessores();
+  // Só professores ativos podem ser regentes de uma turma.
+  const professores = listarProfessoresAtivos();
   const opcoesProfessores = professores.map((professor) => ({ valor: professor.nome, texto: professor.nome }));
   const form = criarModal(turma ? 'Editar turma' : 'Criar nova turma', [
     { id: 'segmento', rotulo: 'Segmento', opcoes: [{ valor: 'Educação Infantil', texto: 'Educação Infantil' }, { valor: 'Ensino Fundamental I', texto: 'Ensino Fundamental I' }] },

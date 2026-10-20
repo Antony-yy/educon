@@ -1,5 +1,3 @@
-
-
 const CHAVE_USUARIOS = 'educon_usuarios';
 const CHAVE_ALUNOS = 'educon_alunos';
 const CHAVE_TURMAS = 'educon_turmas';
@@ -44,9 +42,10 @@ export function inicializarSeedData() {
 
   if (!localStorage.getItem(CHAVE_PROFESSORES)) {
     salvarDados(CHAVE_PROFESSORES, [
-      { id: 'prof-1', nome: 'Prof.ª Helena Lima' },
-      { id: 'prof-2', nome: 'Prof.ª Beatriz Alves' },
-      { id: 'prof-3', nome: 'Prof.ª Ana Paula' }
+      { id: 'prof-1', nome: 'Prof.ª Helena Lima', email: 'helena.lima@primeirosol.edu.br', ativo: true },
+      { id: 'prof-2', nome: 'Prof.ª Beatriz Alves', email: 'beatriz.alves@primeirosol.edu.br', ativo: true },
+      { id: 'prof-3', nome: 'Prof.ª Ana Paula', email: 'ana.paula@primeirosol.edu.br', ativo: true },
+      { id: 'prof-4', nome: 'Prof. João Silva', email: 'joao.silva@primeirosol.edu.br', ativo: false }
     ]);
   }
 

@@ -96,6 +96,7 @@ export function cadastrarTurma(dadosForm) {
   }
 
   const { matriculas = [], ...dadosTurma } = dadosForm;
+  validarAlunosDaTurma(dadosTurma.segmento, matriculas);
   const novaTurma = { id: crypto.randomUUID(), ...dadosTurma, nome: dadosForm.nome.trim() };
   salvarDados(CHAVE_TURMAS, [novaTurma, ...turmas]);
   atualizarAlunosDaTurma(novaTurma, matriculas);
@@ -113,6 +114,7 @@ export function atualizarTurma(id, dadosForm) {
   const turmaAnterior = turmas.find((turma) => turma.id === id);
   if (!turmaAnterior) throw new Error('Turma não encontrada.');
   const { matriculas = [], ...dadosTurma } = dadosForm;
+  validarAlunosDaTurma(dadosTurma.segmento, matriculas);
   const turmaAtualizada = { ...turmaAnterior, ...dadosTurma, nome: dadosForm.nome.trim() };
   salvarDados(CHAVE_TURMAS, turmas.map((turma) => turma.id === id ? turmaAtualizada : turma));
   atualizarAlunosDaTurma(turmaAtualizada, matriculas);
@@ -147,13 +149,31 @@ export function alunosDaTurma(turmaId) {
   return listarAlunos().filter((aluno) => aluno.turmaId === turmaId);
 }
 
+function grupoDeSegmento(segmento = '') {
+  const normalizado = String(segmento).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
+  if (normalizado.includes('fundamental')) return 'fundamental';
+  if (normalizado.includes('infantil') || normalizado.includes('pre')) return 'infantil';
+  return '';
+}
+
+export function alunoCompativelComTurma(aluno, turma) {
+  const grupoAluno = grupoDeSegmento(aluno.segmento);
+  const grupoTurma = grupoDeSegmento(turma.segmento);
+  return Boolean(grupoAluno && grupoTurma && grupoAluno === grupoTurma);
+}
+
 export function enturmarAluno(matricula, turmaId) {
-  const turma = listarTurmas().find((item) => item.id === turmaId);
-  if (!turma) throw new Error('Selecione uma turma válida.');
+  const turma = turmaId ? listarTurmas().find((item) => item.id === turmaId) : null;
+  if (turmaId && !turma) throw new Error('Selecione uma turma válida.');
   const alunos = listarAlunos();
-  salvarDados(CHAVE_ALUNOS, alunos.map((aluno) => (
-    aluno.matricula === matricula ? { ...aluno, turmaId, turmaNome: turma.nome } : aluno
-  )));
+  const aluno = alunos.find((item) => item.matricula === matricula);
+  if (!aluno) throw new Error('Aluno não encontrado.');
+  if (turma && !alunoCompativelComTurma(aluno, turma)) {
+    throw new Error('O aluno não pertence ao segmento desta turma.');
+  }
+  salvarDados(CHAVE_ALUNOS, alunos.map((item) => item.matricula === matricula
+    ? { ...item, turmaId: turma?.id ?? null, turmaNome: turma?.nome ?? 'Não Enturmado' }
+    : item));
 }
 
 // --- GESTÃO DE PROFESSORES ---
@@ -257,4 +277,12 @@ export function alterarStatusProfessor(id, ativo) {
   const professores = listarProfessores();
   if (!professores.some((p) => p.id === id)) throw new Error('Professor não encontrado.');
   salvarDados(CHAVE_PROFESSORES, professores.map((p) => (p.id === id ? { ...p, ativo } : p)));
+}
+
+function validarAlunosDaTurma(segmento, matriculas) {
+  const selecionadas = new Set(matriculas);
+  const incompatível = listarAlunos().some((aluno) => (
+    selecionadas.has(aluno.matricula) && !alunoCompativelComTurma(aluno, { segmento })
+  ));
+  if (incompatível) throw new Error('A turma só pode receber alunos do mesmo segmento.');
 }

@@ -16,77 +16,6 @@ export function listarAlunos() {
   return obterDados(CHAVE_ALUNOS);
 }
 
-// --- GESTÃO DE PROFESSORES ---
-const ehAtivo = (professor) => professor.ativo !== false; // seed antigo sem "ativo" conta como ativo
-
-export function listarProfessores() {
-  return obterDados(CHAVE_PROFESSORES);
-}
-
-export function listarProfessoresAtivos() {
-  return listarProfessores().filter(ehAtivo);
-}
-
-const somenteDigitos = (valor = '') => String(valor).replace(/\D/g, '');
-
-export function validarCpf(cpf) {
-  const d = somenteDigitos(cpf);
-  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
-  const digito = (qtd) => {
-    let soma = 0;
-    for (let i = 0; i < qtd; i++) soma += Number(d[i]) * (qtd + 1 - i);
-    const resto = (soma * 10) % 11;
-    return resto === 10 ? 0 : resto;
-  };
-  return digito(9) === Number(d[9]) && digito(10) === Number(d[10]);
-}
-
-export function formatarCpf(cpf = '') {
-  return somenteDigitos(cpf).replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
-}
-
-export function formatarTelefone(telefone = '') {
-  const d = somenteDigitos(telefone);
-  if (d.length === 11) return d.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-  if (d.length === 10) return d.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
-  return d;
-}
-
-export function cadastrarProfessor({ nome, email, cpf, telefone }) {
-  const nomeLimpo = nome?.trim();
-  const emailLimpo = email?.trim().toLocaleLowerCase();
-  const cpfLimpo = somenteDigitos(cpf);
-  const telefoneLimpo = somenteDigitos(telefone);
-
-  if (!nomeLimpo || !emailLimpo) throw new Error('Informe nome e e-mail.');
-  if (!validarCpf(cpfLimpo)) throw new Error('CPF inválido.');
-  if (![10, 11].includes(telefoneLimpo.length)) throw new Error('Telefone inválido. Informe DDD + número.');
-
-  const professores = listarProfessores();
-  if (professores.some((p) => p.email?.toLocaleLowerCase() === emailLimpo)) {
-    throw new Error('Já existe um professor com este e-mail.');
-  }
-  if (professores.some((p) => p.cpf === cpfLimpo)) {
-    throw new Error('Já existe um professor com este CPF.');
-  }
-
-  const novoProfessor = {
-    id: crypto.randomUUID(),
-    nome: nomeLimpo,
-    email: emailLimpo,
-    cpf: cpfLimpo,          // salvo só com dígitos; formate ao exibir
-    telefone: telefoneLimpo,
-    ativo: true
-  };
-  salvarDados(CHAVE_PROFESSORES, [novoProfessor, ...professores]);
-  return novoProfessor;
-}
-
-export function alterarStatusProfessor(id, ativo) {
-  const professores = listarProfessores();
-  if (!professores.some((p) => p.id === id)) throw new Error('Professor não encontrado.');
-  salvarDados(CHAVE_PROFESSORES, professores.map((p) => (p.id === id ? { ...p, ativo } : p)));
-}
 
 export function cadastrarAluno(dadosForm) {
   const alunos = obterDados(CHAVE_ALUNOS);
@@ -225,4 +154,107 @@ export function enturmarAluno(matricula, turmaId) {
   salvarDados(CHAVE_ALUNOS, alunos.map((aluno) => (
     aluno.matricula === matricula ? { ...aluno, turmaId, turmaNome: turma.nome } : aluno
   )));
+}
+
+// --- GESTÃO DE PROFESSORES ---
+const ehAtivo = (professor) => professor.ativo !== false;
+const somenteDigitos = (valor = '') => String(valor).replace(/\D/g, '');
+
+export function listarProfessores() { return obterDados(CHAVE_PROFESSORES); }
+export function listarProfessoresAtivos() { return listarProfessores().filter(ehAtivo); }
+
+export function validarCpf(cpf) {
+  const d = somenteDigitos(cpf);
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+  const digito = (qtd) => {
+    let soma = 0;
+    for (let i = 0; i < qtd; i++) soma += Number(d[i]) * (qtd + 1 - i);
+    const resto = (soma * 10) % 11;
+    return resto === 10 ? 0 : resto;
+  };
+  return digito(9) === Number(d[9]) && digito(10) === Number(d[10]);
+}
+export function formatarCpf(cpf = '') {
+  return somenteDigitos(cpf).replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+}
+export function formatarTelefone(telefone = '') {
+  const d = somenteDigitos(telefone);
+  if (d.length === 11) return d.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+  if (d.length === 10) return d.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+  return d;
+}
+// Separa primeiro nome e último sobrenome, ignorando títulos como "Prof.ª" e "Dr.".
+function separarNomeProfessor(nome) {
+  const partes = String(nome).trim().split(/\s+/).filter((parte) => parte && !parte.includes('.'));
+  if (partes.length < 2) throw new Error('Informe nome e sobrenome do professor.');
+  return { primeiroNome: partes[0], sobrenome: partes[partes.length - 1] };
+}
+
+const semAcento = (texto) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const paraLogin = (texto) => semAcento(texto).toLocaleLowerCase('pt-BR');
+
+// Usuário: nome.sobrenome, minúsculo e sem acento. Ex.: "Camila Rocha" -> "camila.rocha".
+export function gerarUsuarioProfessor(nome) {
+  const { primeiroNome, sobrenome } = separarNomeProfessor(nome);
+  return paraLogin(`${primeiroNome}.${sobrenome}`);
+}
+
+// Senha inicial: sobrenome + nome + 4 últimos dígitos do celular, minúscula e sem acento.
+// Ex.: "Camila Rocha" + (83) 99999-8888 -> "rochacamila8888".
+export function gerarSenhaInicialProfessor(nome, telefone) {
+  const { primeiroNome, sobrenome } = separarNomeProfessor(nome);
+  return paraLogin(`${sobrenome}${primeiroNome}${somenteDigitos(telefone).slice(-4)}`);
+}
+
+export function cadastrarProfessor({ nome, email, cpf, telefone }) {
+  const nomeLimpo = nome?.trim();
+  const emailLimpo = email?.trim().toLocaleLowerCase();
+  const cpfLimpo = somenteDigitos(cpf);
+  const telefoneLimpo = somenteDigitos(telefone);
+
+  if (!nomeLimpo || !emailLimpo) throw new Error('Informe nome e e-mail.');
+  if (!validarCpf(cpfLimpo)) throw new Error('CPF inválido.');
+  if (![10, 11].includes(telefoneLimpo.length)) throw new Error('Telefone inválido. Informe DDD + número.');
+
+  const professores = listarProfessores();
+  const usuarios = obterDados(CHAVE_USUARIOS);
+  if (professores.some((p) => p.email?.toLocaleLowerCase() === emailLimpo)) {
+    throw new Error('Já existe um professor com este e-mail.');
+  }
+  if (professores.some((p) => p.cpf === cpfLimpo)) throw new Error('Já existe um professor com este CPF.');
+
+  // Gera usuário e senha antes de salvar qualquer coisa: se der erro, nada fica pela metade.
+  const usuarioBase = gerarUsuarioProfessor(nomeLimpo);
+  const senhaInicial = gerarSenhaInicialProfessor(nomeLimpo, telefoneLimpo);
+  // Dois professores com o mesmo nome.sobrenome: o segundo vira "ana.souza2", o terceiro "ana.souza3"...
+  let usuario = usuarioBase;
+  for (let numero = 2; usuarios.some((conta) => conta.usuario === usuario); numero++) {
+    usuario = `${usuarioBase}${numero}`;
+  }
+
+  const novoProfessor = {
+    id: crypto.randomUUID(),
+    nome: nomeLimpo,
+    email: emailLimpo,
+    cpf: cpfLimpo,
+    telefone: telefoneLimpo,
+    ativo: true
+  };
+  salvarDados(CHAVE_PROFESSORES, [novoProfessor, ...professores]);
+  salvarDados(CHAVE_USUARIOS, [...usuarios, {
+    usuario,
+    senha: senhaInicial,
+    nome: nomeLimpo,
+    perfil: 'professor',
+    professorId: novoProfessor.id,
+    primeiroAcesso: true
+  }]);
+
+  return { ...novoProfessor, usuario, senhaInicial };
+}
+
+export function alterarStatusProfessor(id, ativo) {
+  const professores = listarProfessores();
+  if (!professores.some((p) => p.id === id)) throw new Error('Professor não encontrado.');
+  salvarDados(CHAVE_PROFESSORES, professores.map((p) => (p.id === id ? { ...p, ativo } : p)));
 }

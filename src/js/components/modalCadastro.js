@@ -1,5 +1,5 @@
 import {
-  cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos, listarProfessoresAtivos,
+  alunoCompativelComTurma, cadastrarAluno, cadastrarTurma, atualizarTurma, listarAlunos, listarProfessoresAtivos,
   cadastrarProfessor, TURMAS_POR_SEGMENTO
 } from '../services/cadastrosService.js';
 
@@ -24,13 +24,13 @@ function criarCampo({ id, rotulo, tipo = 'text', opcoes = [], multiplo = false, 
   return campo;
 }
 
-function criarSeletorAlunos(turma) {
+function criarSeletorAlunos(turma, campoSegmento) {
   const alunosDisponiveis = listarAlunos().filter((aluno) => {
     const estaSemTurma = !aluno.turmaId && (!aluno.turmaNome || aluno.turmaNome === 'Não Enturmado');
     return estaSemTurma || aluno.turmaId === turma?.id;
   });
   const matriculasDaTurma = new Set(
-    listarAlunos().filter((aluno) => aluno.turmaId === turma?.id).map((aluno) => aluno.matricula)
+    listarAlunos().filter((aluno) => turma && aluno.turmaId === turma.id).map((aluno) => aluno.matricula)
   );
   const campo = document.createElement('div');
   campo.className = 'field';
@@ -57,6 +57,14 @@ function criarSeletorAlunos(turma) {
     texto.textContent = `${aluno.nome} — ${aluno.matricula}`;
     item.append(checkbox, texto);
     lista.append(item);
+    const atualizarCompatibilidade = () => {
+      const compativel = alunoCompativelComTurma(aluno, { segmento: campoSegmento.value });
+      item.hidden = !compativel;
+      checkbox.disabled = !compativel;
+      if (!compativel) checkbox.checked = false;
+    };
+    campoSegmento.addEventListener('change', atualizarCompatibilidade);
+    atualizarCompatibilidade();
   });
   busca.addEventListener('input', () => {
     const termo = busca.value.trim().toLocaleLowerCase();
@@ -133,12 +141,13 @@ export function criarModalTurma(onSucesso, turma = null) {
   // Só professores ativos podem ser regentes de uma turma.
   const professores = listarProfessoresAtivos();
   const opcoesProfessores = professores.map((professor) => ({ valor: professor.nome, texto: professor.nome }));
+  const grupoSegmento = criarCampo({ id: 'segmento', rotulo: 'Segmento', opcoes: [{ valor: 'Educação Infantil', texto: 'Educação Infantil' }, { valor: 'Ensino Fundamental I', texto: 'Ensino Fundamental I' }] });
   const form = criarModal(turma ? 'Editar turma' : 'Criar nova turma', [
-    { id: 'segmento', rotulo: 'Segmento', opcoes: [{ valor: 'Educação Infantil', texto: 'Educação Infantil' }, { valor: 'Ensino Fundamental I', texto: 'Ensino Fundamental I' }] },
+    grupoSegmento,
     { id: 'nome', rotulo: 'Turma', selecao: true },
     { id: 'turno', rotulo: 'Turno', opcoes: [{ valor: 'Matutino', texto: 'Matutino' }, { valor: 'Vespertino', texto: 'Vespertino' }] },
     { id: 'professor', rotulo: 'Professor regente', opcoes: opcoesProfessores },
-    criarSeletorAlunos(turma)
+    criarSeletorAlunos(turma, grupoSegmento.querySelector('#segmento'))
   ], (dados) => { turma ? atualizarTurma(turma.id, dados) : cadastrarTurma(dados); onSucesso?.(); }, turma ? 'Salvar alterações' : 'Criar turma');
   const campoSegmento = form.querySelector('#segmento');
   const campoNome = form.querySelector('#nome');

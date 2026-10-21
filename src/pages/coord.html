@@ -7,6 +7,7 @@
     <title>EDUCON | Coordenação</title>
     <link rel="icon" href="/primeiro-sol.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/src/styles/coord.css" />
+    <link rel="stylesheet" href="/src/styles/professores.css" />
   </head>
 
   <body>
@@ -33,19 +34,19 @@
             <p class="nav_label">Navegação</p>
             <ul class="nav_list">
               <li>
-                <a id="btn-gestao-turmas" class="nav_link nav_link--active" href="#turmas" aria-current="page">
+                <a id="btn-gestao-turmas" class="nav_link nav_link--active" href="#turmas" aria-current="page" data-secao="turmas">
                   <i class="bi bi-card-text"></i>
                   <span>Gestão de Turmas</span>
                 </a>
               </li>
               <li>
-                <a id="btn-matriculas-alunos" class="nav_link" href="#matriculas">
+                <a id="btn-matriculas-alunos" class="nav_link" href="#matriculas" data-secao="alunos">
                   <i class="bi bi-people"></i>
                   <span>Matrículas de Alunos</span>
                 </a>
               </li>
               <li>
-                <a class="nav_link" href="professores.html">
+                <a id="btn-gestao-professores" class="nav_link" href="#professores" data-secao="professores">
                   <i class="bi bi-person-badge"></i>
                   <span>Gestão de Professores</span>
                 </a>
@@ -90,7 +91,7 @@
           <div class="page-header_text">
             <p class="eyebrow">Colégio Primeiro Sol · João Pessoa · Paraíba</p>
             <h1 class="page-title">Painel do Coordenador</h1>
-            <p class="page-subtitle">Gerencie turmas, alunos e o período escolar em um só lugar.</p>
+              <p class="page-subtitle">Gerencie turmas, alunos, professores e frequência em um só lugar.</p>
           </div>
 
           <div class="page-header_actions">
@@ -102,18 +103,23 @@
               <i class="bi bi-plus-lg"></i>
               Criar nova turma
             </button>
+            <button id="btn-novo-professor" class="btn btn--primary painel-oculto" type="button">
+              <i class="bi bi-plus-lg"></i>
+              Cadastrar professor
+            </button>
           </div>
         </header>
 
         <div id="tabs-painel" class="tabs" role="tablist" aria-label="Seções do painel">
-          <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true">
+          <button class="tabs_item tabs_item--active" type="button" role="tab" aria-selected="true" data-secao="turmas">
             <i class="bi bi-card-text"></i>
             Gestão de turmas
           </button>
-          <a class="tabs_item" href="professores.html" role="tab" aria-selected="false">
+          <button id="tab-professores" class="tabs_item" type="button" role="tab" aria-selected="false" data-secao="professores">
             <i class="bi bi-people"></i>
             Gestão de professores
-          </a>
+            <span class="tabs_badge" id="tabs-badge">0</span>
+          </button>
           <button class="tabs_item" type="button" role="tab" aria-selected="false">
             <i class="bi bi-calendar3"></i>
             Horários
@@ -315,6 +321,50 @@
           </div>
         </section>
 
+        <section id="painel-enturmar" class="panel painel-oculto" aria-labelledby="enturmar-title">
+          <header class="panel_header">
+            <div>
+              <h2 id="enturmar-title" class="panel_title">Enturmação de alunos</h2>
+              <p class="panel_subtitle">Transfira alunos entre as listas compatíveis com o segmento escolhido</p>
+            </div>
+            <label class="enrollment-class-field" for="seletor-turma-enturmar">
+              Turma
+              <select id="seletor-turma-enturmar" class="field_input"></select>
+            </label>
+          </header>
+          <div id="detalhes-turma-enturmar" class="enrollment-summary" role="status">
+            Selecione uma turma para consultar o segmento e o professor regente.
+          </div>
+          <div class="enrollment-lists">
+            <section class="enrollment-list" aria-labelledby="disponiveis-title">
+              <header class="enrollment-list_header">
+                <div>
+                  <h3 id="disponiveis-title">Alunos do segmento sem turma</h3>
+                  <p id="disponiveis-contagem" class="panel_subtitle">0 alunos</p>
+                </div>
+                <label class="search enrollment-search">
+                  <i class="bi bi-search search_icon" aria-hidden="true"></i>
+                  <input id="busca-aluno-disponivel" class="search_input" type="search" placeholder="Buscar aluno..." aria-label="Buscar aluno sem turma" />
+                </label>
+              </header>
+              <ul id="lista-alunos-disponiveis" class="enrollment-students"></ul>
+            </section>
+            <section class="enrollment-list" aria-labelledby="nesta-turma-title">
+              <header class="enrollment-list_header">
+                <div>
+                  <h3 id="nesta-turma-title">Alunos nesta turma</h3>
+                  <p id="nesta-turma-contagem" class="panel_subtitle">0 alunos</p>
+                </div>
+                <label class="search enrollment-search">
+                  <i class="bi bi-search search_icon" aria-hidden="true"></i>
+                  <input id="busca-aluno-enturmado" class="search_input" type="search" placeholder="Buscar aluno..." aria-label="Buscar aluno nesta turma" />
+                </label>
+              </header>
+              <ul id="lista-alunos-enturmados" class="enrollment-students"></ul>
+            </section>
+          </div>
+        </section>
+
         <section id="painel-alunos" class="panel painel-oculto" aria-labelledby="alunos-title">
           <header class="panel_header">
             <div>
@@ -333,6 +383,41 @@
             </table>
           </div>
         </section>
+
+        <section id="resumo-professores" class="stats painel-oculto" aria-label="Resumo dos professores">
+          <article class="stat">
+            <div class="stat_icon stat_icon--blue"><i class="bi bi-person-badge"></i></div>
+            <div class="stat_info"><p class="stat_label">Total de professores</p><p class="stat_value" id="stat-total">0 docentes</p></div>
+          </article>
+          <article class="stat">
+            <div class="stat_icon stat_icon--green"><i class="bi bi-check-circle"></i></div>
+            <div class="stat_info"><p class="stat_label">Professores ativos</p><p class="stat_value" id="stat-ativos">0 ativos</p></div>
+          </article>
+          <article class="stat">
+            <div class="stat_icon stat_icon--purple"><i class="bi bi-pause-circle"></i></div>
+            <div class="stat_info"><p class="stat_label">Professores inativos</p><p class="stat_value" id="stat-inativos">0 inativos</p></div>
+          </article>
+        </section>
+
+        <section id="painel-professores" class="panel painel-oculto" aria-labelledby="professores-title">
+          <header class="panel_header">
+            <div>
+              <h2 id="professores-title" class="panel_title">Quadro de Professores</h2>
+              <p class="panel_subtitle">Docentes cadastrados e situação contratual no sistema</p>
+            </div>
+            <div class="search">
+              <i class="bi bi-search search_icon"></i>
+              <input id="busca-professor" class="search_input" type="search" placeholder="Buscar professor..." aria-label="Buscar professor" />
+            </div>
+          </header>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th scope="col">Nome</th><th scope="col">CPF</th><th scope="col">E-mail</th><th scope="col">Telefone</th><th scope="col">Status</th><th scope="col">Ações</th></tr></thead>
+              <tbody id="lista-professores"></tbody>
+            </table>
+          </div>
+        </section>
+
       </main>
     </div>
     <script type="module" src="/src/js/coord.js"></script>

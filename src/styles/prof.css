@@ -1,0 +1,205 @@
+/* Só o que a página do professor tem de novo. O restante (sidebar, abas, painel, tabela)
+   vem de coord.css e professores.css, para ficar igual ao resto do EDUCON. */
+
+/* Garante que o atributo "hidden" esconda mesmo quando a classe define "display". */
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Filtros ---------- */
+.prof-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+}
+
+.prof-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.prof-controle {
+  min-height: 2.5rem;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: #0f172a;
+  font: inherit;
+  font-weight: 500;
+}
+
+.prof-controle:focus-visible,
+.prof-switch input:focus-visible + .prof-switch_trilho {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* ---------- Aviso (sucesso / erro) ---------- */
+.prof-aviso {
+  margin: 0 0 1rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.prof-aviso--ok {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #065f46;
+}
+
+.prof-aviso--erro {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+
+/* ---------- Aluno ---------- */
+.prof-aluno {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.prof-aluno_num {
+  width: 1.5rem;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.prof-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.6rem;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.prof-aluno_nome {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ---------- Presença (switch com checkbox de verdade) ---------- */
+.prof-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.prof-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.prof-switch_trilho {
+  position: relative;
+  width: 2.5rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  background: #dc2626;
+  transition: background 0.15s;
+}
+
+.prof-switch_trilho::after {
+  content: '';
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+
+.prof-switch input:checked + .prof-switch_trilho {
+  background: #059669;
+}
+
+.prof-switch input:checked + .prof-switch_trilho::after {
+  transform: translateX(1.1rem);
+}
+
+.prof-switch_texto {
+  min-width: 4.5rem;
+  font-weight: 600;
+  color: #065f46;
+}
+
+.prof-switch--falta .prof-switch_texto {
+  color: #b91c1c;
+}
+
+.prof-observacao {
+  width: 100%;
+  min-width: 14rem;
+}
+
+/* ---------- Notas ---------- */
+.prof-tabela-notas th,
+.prof-tabela-notas td {
+  white-space: nowrap;
+}
+
+.prof-tabela-notas .prof-grupo {
+  border-left: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+.prof-tabela-notas td.prof-grupo {
+  text-align: center;
+}
+
+.prof-nota {
+  width: 4.5rem;
+  padding-inline: 0.5rem;
+  text-align: center;
+}
+
+.prof-nota[aria-invalid='true'] {
+  border-color: #dc2626;
+  background: #fef2f2;
+}
+
+.prof-media {
+  display: inline-block;
+  min-width: 2.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+
+.prof-parecer {
+  width: 100%;
+  min-width: 18rem;
+  resize: vertical;
+}
+
+.prof-conceito {
+  min-width: 14rem;
+}
+
+@media (max-width: 640px) {
+  .prof-filtros {
+    flex-direction: column;
+  }
+}

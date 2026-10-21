@@ -30,14 +30,17 @@ form.addEventListener('submit', (event) => {
     return;
   }
 
-  sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(conta));
+    sessionStorage.setItem(CHAVE_SESSAO, JSON.stringify(conta));
+
   if (conta.perfil === 'aluno') {
     window.location.replace('/src/pages/aluno.html');
   } else if (conta.perfil === 'coordenador') {
     window.location.replace('/src/pages/coord.html');
+  } else if (conta.perfil === 'professor') {
+    window.location.replace('/src/pages/prof.html');
   } else {
     sessionStorage.removeItem(CHAVE_SESSAO);
-    mostrarErro(inputUsuario, 'O acesso de professor ainda não está disponível.');
+    mostrarErro(inputUsuario, 'Perfil de usuário inválido.');
   }
 });
 
